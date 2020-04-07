@@ -1,12 +1,12 @@
 {
-  "name": "bvu-assistant",
+  "name": "bvu-chatbot-framework",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ocean",
+  "author": "iceStorm",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
