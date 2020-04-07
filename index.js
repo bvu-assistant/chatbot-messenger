@@ -12,8 +12,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: false}));
 app.listen(3000, () =>
 {
     console.log('Assistant server listening on port 3000.');
