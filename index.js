@@ -16,13 +16,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.listen(3000, () =>
 {
-    console.log('Server listening on port 3000.');
+    console.log('Assistant server listening on port 3000.');
 });
 
 
 app.get('/', (req, res) =>
 {
-    res.status(200).send('Oke.');
+    res.send('Assistant server running Oke.');
 });
 
 
@@ -435,33 +435,6 @@ app.post('/webhook', async function(req, res)
 
             let genericTemplate = builder.createGenericTemplate(elems);
             bot.sendMessage(recipientID, genericTemplate);
-
-
-            // request
-            // ({
-            //     method: 'POST',
-            //     url: process.env.MESSAGE_API,
-            //     qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
-            //     json:
-            //     {
-            //         "recipient":
-            //         {
-            //             "id": recipientID
-            //         },
-            //         "message":
-            //         {
-            //             "attachment":
-            //             {
-            //                 "type":"template",
-            //                 "payload":
-            //                 {
-            //                     "template_type":"generic",
-            //                     "elements": elems
-            //                 }
-            //             }
-            //         }
-            //     }
-            // });
         }
         catch (err)
         {
