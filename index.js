@@ -1,21 +1,25 @@
 
-const morgan = require('morgan');
-const express = require('express');
+const logger = require('morgan');
 const bodyParser = require('body-parser');
+const express = require('express');
 const app = express();
-app.use(morgan('dev'));
+require('dotenv').config();
+
+
+
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 
 
 
-app.listen(9000, ()=>
+//  Mở cổng
+app.listen(process.env.PORT, () =>
 {
-    console.log('Assistant server listening on port: 9000.');
-})
+    console.log(`Chatbot server listening on port: ${process.env.PORT}.\n`);
+});
 
-app.get('/', (req, res) =>
-{
-    res.status(200).send("Assistant server running Oke.");
-})
+
+//  Xử lý khi truy cập vào trang gốc
+app.get('/', (req, res) => { res.status(200).send("Server chạy ngon lành."); });
