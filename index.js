@@ -17,9 +17,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 //  Mở cổng
 app.listen(process.env.PORT, () =>
 {
-    console.log(`Chatbot server listening on port: ${process.env.PORT}.\n`);
+    console.log(`Assistant server listening on port: ${process.env.PORT}.\n`);
 });
 
 
 //  Xử lý khi truy cập vào trang gốc
-app.get('/', (req, res) => { res.status(200).send("Server chạy ngon lành."); });
+app.get('/', (req, res) => { res.status(200).send("Assistant server chạy ngon lành."); });
