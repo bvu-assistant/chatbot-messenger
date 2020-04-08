@@ -5,18 +5,17 @@ const _builder = require('./MessageBuilder');
 const eFinder = require('./student/elearning-finder');
 const morgan = require('morgan');
 const express = require('express');
-const request = require('request');
 const bodyParser = require('body-parser');
-
+require('dotenv').config();
 
 
 const app = express();
 app.use(morgan('dev'));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: false}));
-app.listen(3000, () =>
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.listen(process.env.PORT, () =>
 {
-    console.log('Assistant server listening on port 3000.');
+    console.log('Assistant server listening on port:', process.env.PORT);
 });
 
 
