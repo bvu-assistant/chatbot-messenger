@@ -20,62 +20,69 @@ class User
     {
         return new Promise(async (resolve, reject) =>
         {
-            this.ID = userID;
-            mongoClient.connect(connectionString, (err, db) =>
+            try
             {
-                if (err) return reject(err);
-
-
-                let dbo = db.db("FacebookUsers");
-                dbo.collection('Profile').findOne({ID: `${this.ID}`}, async (err, result) =>   //  Tìm kiếm người dùng Facebook theo ID trong bảng Profile
+                this.ID = userID;
+                mongoClient.connect(connectionString, (err, db) =>
                 {
-                    if (err) return reject(err);
-                    if (result === null) //  Không tìm thấy người dùng ==> Là người dùng mới
+                    if (err) throw err;
+    
+    
+                    let dbo = db.db("FacebookUsers");
+                    dbo.collection('Profile').findOne({ID: `${this.ID}`}, async (err, result) =>   //  Tìm kiếm người dùng Facebook theo ID trong bảng Profile
                     {
-
-                        let profile = await this.getNewUserProfile();
-                        if (profile === undefined)
+                        if (err) throw err;
+                        if (result === null) //  Không tìm thấy người dùng ==> Là người dùng mới
                         {
-                            console.log('Can\'t get profile of:', this.ID);
+    
+                            let profile = await this.getNewUserProfile();
+                            if (profile === undefined)
+                            {
+                                console.log('Can\'t get profile of:', this.ID);
+                            }
+                            else
+                            {
+                                //  Assingning new user profile
+                                this.Session = '';
+                                this.FirstName = profile.first_name;
+                                this.LastName = profile.last_name;
+                                this.FullName = profile.name;
+                                this.AvatarLink = profile.profile_pic;
+                                console.log('Successfully getted new user profile:', this.ID);
+    
+    
+                                //  Saving the new user profile
+                                db.close();
+                                this.saveNewUserProfile(dbo)
+                                .then( ()=>
+                                {
+                                    return resolve(this);
+                                })
+                                .catch(err =>
+                                    {
+                                        console.log('user.js:58 - Error', err);
+                                    });
+                            }
                         }
                         else
                         {
-                            //  Assingning new user profile
-                            this.Session = '';
-                            this.FirstName = profile.first_name;
-                            this.LastName = profile.last_name;
-                            this.FullName = profile.name;
-                            this.AvatarLink = profile.profile_pic;
-                            console.log('Successfully getted user profile:', this.ID);
-
-
-                            //  Saving the new user profile
-                            db.close();
-                            this.saveNewUserProfile(dbo)
-                            .then( ()=>
-                            {
-                                return resolve(this);
-                            })
-                            .catch(err =>
-                                {
-                                    console.log('user.js:58 - Error', err);
-                                });
+                            this.Session = result.Session;
+                            this.FirstName = result.FirstName;
+                            this.LastName = result.LastName;
+                            this.FullName = result.FullName;
+                            this.AvatarLink = result.AvatarLink;
+                            console.log('Detected old user:', this);
                         }
-                    }
-                    else
-                    {
-                        this.Session = result.Session;
-                        this.FirstName = result.FirstName;
-                        this.LastName = result.LastName;
-                        this.FullName = result.FullName;
-                        this.AvatarLink = result.AvatarLink;
-                        console.log('Detected old user:', this);
-                    }
-    
-    
-                    return resolve(this);
+        
+        
+                        return resolve(this);
+                    });
                 });
-            });
+            }
+            catch (err)
+            {
+                console.log('user.js - constructor - error:', err);
+            }
         });
     }
 
@@ -106,6 +113,7 @@ class User
                 {
                     if (err || (res.statusCode !== 200))
                     {
+                        console.log('getNewUserProfile() - Error:', err);
                         return reject(undefined);
                     }
     

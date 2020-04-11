@@ -7,53 +7,61 @@ const _user = require('./user');
 class Bot
 {
     #accessToken = process.env.PAGE_ACCESS_TOKEN;       //  Private field - Can only be used in this class
-    // hasMessage = false;
-    // isPostBack = false;
-    // isQuickReply = false;
-    // receivedText = null;
-    // payload = null;
-    // timestamp = null;
-    // recipientID = null;
-    // sender = null;
+    hasMessage = false;
+    isPostBack = false;
+    isQuickReply = false;
+    receivedText = null;
+    payload = null;
+    timestamp = null;
+    recipientID = null;
+    sender = null;
 
 
-    constructor(webhookRequest)
+    constructor(webhookRequest, cloner = null)
     {
         return new Promise(async (resolve, reject) =>
         {
-            let messaging = webhookRequest.body.entry[0].messaging[0];
-            console.log('Received messaging:', messaging);
-            let senderID = messaging.sender.id;
-            this.timestamp = messaging.timestamp;
-            this.recipientID = messaging.recipient.id;
-            
-            
-            //  Nếu người dùng gửi tin nhắn văn bản
-            if (messaging.message)
+            if (cloner === null)
             {
-                this.hasMessage = true;
-                let message = messaging.message;
-                this.receivedText = message.text;
-
-
-                if (message.quick_reply)            //  Nếu có nút trả lời (lựa chọn) nhanh
+                let messaging = webhookRequest.body.entry[0].messaging[0];
+                console.log('Received messaging:', messaging);
+                let senderID = messaging.sender.id;
+                this.timestamp = messaging.timestamp;
+                this.recipientID = messaging.recipient.id;
+                
+                
+                //  Nếu người dùng gửi tin nhắn văn bản
+                if (messaging.message)
                 {
-                    this.isQuickReply = true;
-                    if (message.quick_reply.payload)    //  Nếu nút trả lời nhanh có payload
+                    this.hasMessage = true;
+                    let message = messaging.message;
+                    this.receivedText = message.text;
+    
+    
+                    if (message.quick_reply)            //  Nếu có nút trả lời (lựa chọn) nhanh
                     {
-                        this.payload = message.quick_reply.payload;
+                        this.isQuickReply = true;
+                        if (message.quick_reply.payload)    //  Nếu nút trả lời nhanh có payload
+                        {
+                            this.payload = message.quick_reply.payload;
+                        }
                     }
                 }
+                else if (messaging.postback)       //  Khi người dùng lựa chọn các Postback
+                {
+                    this.isPostBack = true;
+                    this.payload = messaging.postback.payload;
+                }
+    
+
+                this.sender = await new _user(senderID);        //  Lấy thông tin User cần nhiều thời gian, do giao tiếp với Database (mongoDB) trên cloud
             }
-            else if (messaging.postback)       //  Khi người dùng lựa chọn các Postback
+            else
             {
-                this.isPostBack = true;
-                this.payload = messaging.postback.payload;
+                Object.assign(this, cloner);
             }
 
-
-
-            this.sender = await new _user(senderID);        //  Lấy thông tin User cần nhiều thời gian, do giao tiếp với Database (mongoDB) trên cloud
+            
             return resolve(this);
         });
     }

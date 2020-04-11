@@ -1,12 +1,13 @@
 const _bot = require('./bot');
 const _user = require('./user');
-const _student = require('./student');
+const _student = require('./student/student');
 const _builder = require('./MessageBuilder');
+const _sessioner = require('./session/session');
 const eFinder = require('./student/elearning-finder');
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
-require('dotenv').config();
+// require('dotenv').config();
 
 
 const app = express();
@@ -44,123 +45,63 @@ app.get('/webhook', (req, res) =>
 // Đoạn code xử lý khi có người nhắn tin cho bot
 app.post('/webhook', async function(req, res)
 {
-    let builder = new _builder();
-    let bot = await new _bot(req);  //  Hàng ngàn dòng code phía sau ...
-    console.log('BOT:', bot);
+    var bot;
+    var builder;
+
+
+    {
+        let messaging = req.body.entry[0].messaging[0];
+        if (messaging.message)
+        {
+            if (messaging.message.app_id)
+            {
+                res.status(200).send('Oke.');
+                return;
+            }
+            else
+            {
+                bot = await new _bot(req);
+                console.log('BOT:', bot);
+                builder = new _builder();
+            }
+        }
+        else if (messaging.postback)
+        {
+            bot = await new _bot(req);
+            console.log('BOT:', bot);
+            builder = new _builder();
+        }
+        else
+        {
+            res.status(200).send('Oke.');
+            return;
+        }
+    }
+
     
 
 
     if (bot.sender.Session && bot.isPostBack)    //..Khi người dùng xoá cuộc hội thoại, mở lại vẫn còn Session cũ
     {
-        if (bot.payload === "GET_STARTED")
-        {
-            bot.sender.Session = "";
-            bot.sender.changeSession("");
-        }
+        // if (bot.payload === "GET_STARTED")
+        // {
+            
+        // }
+        bot.sender.Session = "";
+        bot.sender.changeSession("");
     }
 
     switch (bot.sender.Session)     //  Kiểm tra phiên trò chuyện
     {
         case "TestLooking":
             {
-                if (bot.hasMessage)
-                {
-                    bot.sender.changeSession("");
-                    bot.sendTypingAction(bot.sender.ID);
-
-
-                    //  Lấy thông tin lịch thi
-                    let textTemplates = await _student.getTestSchedule(bot.receivedText);
-                    if (textTemplates.length === 0)
-                    {
-                        bot.sendText(bot.sender.ID, "Không tìm được lịch thi.\n\nMã sinh viên không tồn tại, hoặc máy chủ đang quá tải.");
-                        askForContinue();
-                    }
-                    else
-                    {
-                        textTemplates.forEach(element =>
-                        {
-                            bot.sendMessage(bot.sender.ID, element);
-                        });
-                        askForContinue();
-                    }
-
-
-                    
-                    function askForContinue(delaySeconds = 1.5)
-                    {
-                        //  Hỏi xem có tiếp tục tìm không
-                        let quickreplies = 
-                        [
-                            {
-                                "content_type":"text",
-                                "title":"Có",
-                                "payload":"CONTINUE_TEST_SCHEDULE_LOOKING",
-                                "image_url":"https://tinyurl.com/v92omjj"
-                            },
-                            {
-                                "content_type":"text",
-                                "title":"Không",
-                                "payload":"CANCEL_TEST_SCHEDULE_LOOKING",
-                                "image_url":"https://tinyurl.com/wey7urf"
-                            }
-                        ];
-
-
-                        console.log('Sending quickreplies ...');
-                        let quickrepliesBlock = builder.createQuickReply("Tiếp tục tra cứu lịch thi ?", quickreplies);
-                        bot.sendMessage(bot.sender.ID, quickrepliesBlock, delaySeconds, "RESPONSE");
-                    }
-                }
+                _sessioner.TestLooking.handle(bot);
                 break;
             }
 
         case "LiabilityLooking":
             {
-                if (bot.hasMessage)
-                {
-                    bot.sender.changeSession("");
-                    bot.sendTypingAction(bot.sender.ID);
-                    let liability = await _student.getLiability(bot.receivedText);
-
-
-                    if (liability === undefined)
-                    {
-                        bot.sendText(bot.sender.ID, "Không tìm được công nợ.\n\nMã sinh viên không tồn tại, hoặc máy chủ đang quá tải.");
-                        askForContinue();
-                    }
-                    else
-                    {
-                        bot.sendText(bot.sender.ID, liability);
-                        askForContinue();
-                    }
-
-
-                    function askForContinue(delaySeconds = 1.5)
-                    {
-                        //  Hỏi xem có tiếp tục tìm không
-                        let quickreplies = 
-                        [
-                            {
-                                "content_type":"text",
-                                "title":"Có",
-                                "payload":"CONTINUE_LIABILITY_LOOKING",
-                                "image_url":"https://tinyurl.com/v92omjj"
-                            },
-                            {
-                                "content_type":"text",
-                                "title":"Không",
-                                "payload":"CANCEL_LIABILITY_LOOKING",
-                                "image_url":"https://tinyurl.com/wey7urf"
-                            }
-                        ];
-
-
-                        console.log('Sending quickreplies ...');
-                        let quickrepliesBlock = builder.createQuickReply("Tiếp tục tra cứu công nợ ?", quickreplies);
-                        bot.sendMessage(bot.sender.ID, quickrepliesBlock, delaySeconds, "RESPONSE");
-                    }
-                }
+                _sessioner.LiabilityLooking.handle(bot);
                 break;
             }
 
@@ -220,7 +161,7 @@ app.post('/webhook', async function(req, res)
                                     }
                                 }
                             }
-                            else if (bot.sender.Session.indexOf('ELEARNING_') !== -1)   //..Xử lý và gửi lịc elearning cho người dùng
+                            else if (bot.sender.Session.indexOf('ELEARNING_') !== -1)   //..Xử lý và gửi lịch elearning cho người dùng
                             {
                                 bot.sender.changeSession("");
                                 let enteredClass = bot.receivedText;
