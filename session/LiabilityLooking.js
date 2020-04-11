@@ -1,8 +1,8 @@
 
 
 module.exports = { handle };
-const _bot = require('../bot');
-const _builder = require('../MessageBuilder');
+const _bot = require('../bot/bot');
+const _builder = require('../bot/MessageBuilder');
 const _student = require('../student/student.js');
 
 

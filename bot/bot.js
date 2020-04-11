@@ -1,6 +1,6 @@
 require('dotenv').config();
 const request = require('request');
-const _user = require('./user');
+const _user = require('../user/user');
 
 
 
