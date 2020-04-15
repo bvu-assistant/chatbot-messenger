@@ -21,7 +21,7 @@ async function getTestSchedule(studentID)
         (
             {
                 method: 'GET',
-                url: 'https://bvu-seacher.herokuapp.com',
+                url: process.env.SEARCHER_HOST,
                 qs: 
                 {
                     method: 'ViewTestSchedule',
@@ -82,7 +82,7 @@ async function getLiability(studentID)
         (
             {
                 method: 'GET',
-                url: 'https://bvu-seacher.herokuapp.com',
+                url: process.env.SEARCHER_HOST,
                 qs: 
                 {
                     method: 'ViewLiabilities',

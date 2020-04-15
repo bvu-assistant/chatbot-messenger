@@ -20,27 +20,33 @@ async function handle(cloner)
 
 
         //  Lấy thông tin lịch thi
-        let textTemplates = await _student.getTestSchedule(bot.receivedText);
-        if (textTemplates.length === 0)
+        let testSchedules = await _student.getTestSchedule(bot.receivedText);
+        if (testSchedules.length === 0)
         {
             bot.sendText(bot.sender.ID, "Không tìm được lịch thi.\n\nMã sinh viên không tồn tại, hoặc máy chủ đang quá tải.");
             askForContinue();
         }
         else
         {
-            textTemplates.forEach(element =>
+            askForContinue(testSchedules);
+            testSchedules.forEach(element =>
             {
                 bot.sendMessage(bot.sender.ID, element);
             });
-            askForContinue();
         }
 
 
         
-        function askForContinue(delaySeconds = 1.5)
+        function askForContinue(testSchedules, delaySeconds = 1.5)
         {
+            if (testSchedules)
+            {
+                doGenerateICS(testSchedules);
+            }
+
+            
             //  Hỏi xem có tiếp tục tìm không
-            let quickreplies = 
+            let quickreplies =
             [
                 {
                     "content_type":"text",
@@ -61,5 +67,35 @@ async function handle(cloner)
             let quickrepliesBlock = builder.createQuickReply("Tiếp tục tra cứu lịch thi ?", quickreplies);
             bot.sendMessage(bot.sender.ID, quickrepliesBlock, delaySeconds, "RESPONSE");
         }
+
+        
+        function doGenerateICS(testSchedules)
+        {
+            console.log('First schedule:', testSchedules.slice(0, 1));
+
+
+            const ics = require('ics');
+            const { error, value } = ics.createEvents([
+                {
+                    title: 'Lunch',
+                    start: [2018, 1, 15, 12, 15],
+                    duration: { minutes: 45 }
+                },
+                {
+                    title: 'Dinner',
+                    start: [2018, 1, 15, 12, 15],
+                    duration: { hours: 1, minutes: 30 }
+                }
+            ])
+            
+            if (error) {
+                console.log(error)
+                return
+            }
+            
+            console.log(value)
+        }
     }
 }
+
+
