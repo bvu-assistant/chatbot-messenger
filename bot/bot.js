@@ -24,6 +24,7 @@ class Bot
             if (cloner === null)
             {
                 let messaging = webhookRequest.body.entry[0].messaging[0];
+                console.log('————————————————————————————————————————————————————————————————————————————————————————————————');
                 console.log('Received messaging:', messaging);
                 let senderID = messaging.sender.id;
                 this.timestamp = messaging.timestamp;

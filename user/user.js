@@ -23,7 +23,7 @@ class User
             try
             {
                 this.ID = userID;
-                mongoClient.connect(connectionString, (err, db) =>
+                mongoClient.connect(connectionString, {useUnifiedTopology:true}, (err, db) =>
                 {
                     if (err) throw err;
     
@@ -130,7 +130,7 @@ class User
         return new Promise((resolve, reject) =>
         {
             console.log('Saving new user profile:', this.ID);
-            mongoClient.connect(connectionString, (err, db) =>
+            mongoClient.connect(connectionString, {useUnifiedTopology:true}, (err, db) =>
             {
                 if (err)
                 {
@@ -157,7 +157,7 @@ class User
 
     changeSession(sessionContent)
     {
-        mongoClient.connect(connectionString, (err, db) =>
+        mongoClient.connect(connectionString, {useUnifiedTopology:true}, (err, db) =>
         {
             if (err) throw err;
 

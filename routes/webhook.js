@@ -31,10 +31,6 @@ router.post('/', async (req, res) =>
 {
     try
     {
-        var bot;
-        var builder;
-    
-    
         //  Check the req (request) to determine whether this req is valid to initialize new bot
         {
             let messaging = req.body.entry[0].messaging[0];
@@ -44,34 +40,24 @@ router.post('/', async (req, res) =>
                 {
                     return;
                 }
-                else    //  Valid
-                {
-                    bot = await new _bot(req);
-                    console.log('BOT:', bot);
-                    builder = new _builder();
-                }
             }
-            else if (messaging.postback)    //  Valid
-            {
-                bot = await new _bot(req);
-                console.log('BOT:', bot);
-                builder = new _builder();
-            }
-            else    //  invalid ==> jump out to "finally" block
+            else if (messaging.postback === false)    //  invalid
             {
                 return;
             }
         }
     
-        
+
+
+        //  initialize the bot
+        let bot = await new _bot(req);
+        console.log('BOT:', bot);
+        let builder = new _builder();
+
     
     
         if (bot.sender.Session && bot.isPostBack)    //..Khi người dùng xoá cuộc hội thoại, mở lại vẫn còn Session cũ
         {
-            // if (bot.payload === "GET_STARTED")
-            // {
-                
-            // }
             bot.sender.Session = "";
             bot.sender.changeSession("");
         }
@@ -267,7 +253,7 @@ router.post('/', async (req, res) =>
                                     if (bot.payload.indexOf('ELEARNING_') !== -1)       //..Khi chọn ngày để tra cứu lịch học elearning
                                     {
                                         bot.sender.changeSession(bot.payload);
-                                        bot.sendText(bot.sender.ID, "Nhập mã lớp. Không phân biệt chữ hoa ~ thường.\nVí dụ: dh18lt", 1.05);
+                                        bot.sendText(bot.sender.ID, "Nhập mã lớp. Không phân biệt chữ hoa ~ thường.\n\nVí dụ: dh18lt", 1.05);
                                         console.log('Waiting for enter class name...');
                                     }
                                 }

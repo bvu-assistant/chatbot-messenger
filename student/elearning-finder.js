@@ -96,10 +96,10 @@ function getFollowingSchedules()
             },
             function(err, res, body)
             {
-                if (err)
+                if (err || (res.statusCode !== 200))
                 {
                     console.log('Error when getting following elarning schedules.');
-                    reject(err);
+                    reject(err || body);
                 }
                 else
                 {
