@@ -26,6 +26,12 @@ async function handle(cloner)
                             bot.blocks.send_liability.send(bot, bot.sender.LastResponse);
                             break;
                         }
+                    
+                    case 'MARKS_LOOKINGUP':
+                        {
+                            bot.blocks.send_summary_marks.send(bot, bot.sender.LastResponse);
+                            break;
+                        }
                 }
 
                 break;

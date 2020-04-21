@@ -53,7 +53,7 @@ async function handle(cloner)
             }
         case 'MARKS_LOOKINGUP':
             {
-                bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Chức năng đang phát triển. Vui lòng quay lại sau.'});
+                bot.blocks.get_student_id.send(bot, 'MARKS_LOOKINGUP');
                 break;
             }
 
