@@ -20,6 +20,12 @@ async function handle(cloner)
                             bot.blocks.send_test_schedule.send(bot, bot.sender.LastResponse);
                             break;
                         }
+                    
+                    case 'LIABILITY_LOOKINGUP':
+                        {
+                            bot.blocks.send_liability.send(bot, bot.sender.LastResponse);
+                            break;
+                        }
                 }
 
                 break;

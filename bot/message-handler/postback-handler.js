@@ -33,6 +33,13 @@ async function handle(cloner)
                 bot.blocks.get_student_id.send(bot, 'TESTSCHEDULE_LOOKINGUP');
                 break;
             }
+
+        case 'LIABILITY_LOOKINGUP':
+            {
+                bot.blocks.get_student_id.send(bot, 'LIABILITY_LOOKINGUP');
+                break;
+            }
+        
         case 'ELEARNING_LOOKINGUP':
             {
                 bot.blocks.send_following_elearning.send(bot);
