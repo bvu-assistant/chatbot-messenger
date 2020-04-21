@@ -1,24 +1,24 @@
 {
-  "name": "bvu-chatbot-framework",
+  "name": "bvu-assitant-chatbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon index.js",
-    "ngrok": "ngrok http 3000"
-  },
+  "main": "server.js",
   "author": "iceStorm",
   "license": "ISC",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "ics": "^2.19.0",
-    "mongodb": "^3.5.5",
+    "glob": "^7.1.6",
     "morgan": "^1.10.0",
-    "morgan-body": "^2.4.8",
     "nodemon": "^2.0.3",
-    "request": "^2.88.2"
-  }
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "serve-static": "^1.14.1"
+  },
+  "devDependencies": {}
 }

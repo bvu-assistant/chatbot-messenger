@@ -1,263 +1,162 @@
 require('dotenv').config();
-const request = require('request');
-const _user = require('../user/user');
-
+const profileHanlder = require('./bot-profile-handler');
+const messageSender = require('./message-handler/message-sender');
+const blocks_handler = require('./message-handler/block-handler/blocks-handler');
+const facebook_user = require('../facebook_user/user');
 
 
 class Bot
 {
-    #accessToken = process.env.PAGE_ACCESS_TOKEN;       //  Private field - Can only be used in this class
-    hasMessage = false;
-    isPostBack = false;
-    isQuickReply = false;
-    receivedText = null;
-    payload = null;
-    timestamp = null;
-    recipientID = null;
-    sender = null;
+    #access_token = process.env.PAGE_ACCESS_TOKEN;       //  Private field - Can only be used in this class
 
-
-    constructor(webhookRequest, cloner = null)
+    constructor(webhookRequest, cloner = undefined)
     {
-        return new Promise(async (resolve, reject) =>
+        if (cloner !== undefined)
         {
-            if (cloner === null)
-            {
-                let messaging = webhookRequest.body.entry[0].messaging[0];
-                console.log('————————————————————————————————————————————————————————————————————————————————————————————————');
-                console.log('Received messaging:', messaging);
-                let senderID = messaging.sender.id;
-                this.timestamp = messaging.timestamp;
-                this.recipientID = messaging.recipient.id;
-                
-                
-                //  Nếu người dùng gửi tin nhắn văn bản
-                if (messaging.message)
-                {
-                    this.hasMessage = true;
-                    let message = messaging.message;
-                    this.receivedText = message.text;
-    
-    
-                    if (message.quick_reply)            //  Nếu có nút trả lời (lựa chọn) nhanh
-                    {
-                        this.isQuickReply = true;
-                        if (message.quick_reply.payload)    //  Nếu nút trả lời nhanh có payload
-                        {
-                            this.payload = message.quick_reply.payload;
-                        }
-                    }
-                }
-                else if (messaging.postback)       //  Khi người dùng lựa chọn các Postback
-                {
-                    this.isPostBack = true;
-                    this.payload = messaging.postback.payload;
-                }
-    
+            return cloner;
+        }
 
-                this.sender = await new _user(senderID);        //  Lấy thông tin User cần nhiều thời gian, do giao tiếp với Database (mongoDB) trên cloud
-            }
-            else
+        this.profileHandler = new profileHanlder();
+        this.messageSender = new messageSender();
+        this.blocks = blocks_handler;
+        this.selfID = process.env.SELF_ID;
+        this.is_echo = false;
+        this.hasMessage = false;
+        this.isPostBack = false;
+        this.isQuickReply = false;
+        this.receivedText = undefined;
+        this.payload = undefined;
+        this.timestamp = undefined;
+        this.recipientID = undefined;
+        this.attachments = undefined;
+        this.sender = undefined;
+        this.waitingFor = undefined;
+
+
+        return new Promise( async(resolve, reject) =>
+        {
+            if (cloner !== undefined)    //  cloner là một instance đã được khởi tạo của bot  ==> gán tham chiếu
             {
-                Object.assign(this, cloner);
+                return resolve(cloner);
             }
 
             
+            let messaging = webhookRequest.body.entry[0].messaging[0];
+            console.log('\n\n■■■ Received messaging:', messaging);
+            console.log('\n■■■ Initializing bot...');
+            this.recipientID = messaging.recipient.id;
+            this.timestamp = messaging.timestamp;
+            let senderID = messaging.sender.id;
+            
+            
+            //  Nếu người dùng gửi tin nhắn văn bản
+            if (messaging.message)
+            {
+                this.hasMessage = true;
+                let message = messaging.message;
+
+
+                if (message.is_echo)        //  reply from bot to user
+                {
+                    this.is_echo = true;
+                    console.log('Unable to initialize the bot. Nothing changes. Reason: is_echo');
+                    return reject(undefined);
+                }
+                if (message.attachments)
+                {
+                    this.attachments = message.attachments;
+                }
+                if (message.text)
+                {
+                    this.receivedText = message.text;
+                }
+                if (message.quick_reply)            //  Nếu có nút trả lời (lựa chọn) nhanh
+                {
+                    this.isQuickReply = true;
+                    if (message.quick_reply.payload)    //  Nếu nút trả lời nhanh có payload
+                    {
+                        this.payload = message.quick_reply.payload;
+                    }
+                }
+            }
+            else if (messaging.postback)       //  Khi người dùng lựa chọn các Postback
+            {
+                this.isPostBack = true;
+                this.payload = messaging.postback.payload;
+            }
+            else
+            {
+                console.log('\n■■■ Unable to initialize the bot. Nothing changes.');
+                return reject(undefined);  //  unable to initialize the bot
+            }
+
+
+            this.sender = await new facebook_user(senderID);  //  Lấy thông tin User cần nhiều thời gian
+            this.waitingFor = this.sender.ReplyFor;
+            if (this.sender.ReplyFor !== null)
+                this.sender.LastResponse = this.receivedText;
+
             return resolve(this);
         });
     }
 
 
-    
-
-
-    sendText(recipientID, content, typingDelay = 0)   //  Show typing action delay in second(s)
+    /**
+     * Begin handle the conversation between bot with user.
+     */
+    process()
     {
-        this.sendMessage(recipientID, {text: content}, typingDelay);
-    }
+        this.messageSender.sendSenderAction({recipientID: this.sender.ID, action: 'mark_seen'});
 
-    sendMessage(recipientID, messageObj, typingDelay = 0, messaging_type = "")
-    {
-        console.log('Begin send message for:', recipientID);
-        if (typingDelay > 0)
+
+        if (this.sender.ReplyFor !== null)
         {
-            this.sendTypingAction(recipientID);
+            this.handleUserReply();
+            return;
         }
-
-
-        setTimeout(() =>
+        if (this.isPostBack === true)
         {
-            request
-            (
-                {
-                    method: 'POST',
-                    url: process.env.MESSAGE_API,
-                    qs: { access_token: this.#accessToken },
-                    json:
-                    {
-                        recipient: {id: recipientID},
-                        messaging_type: messaging_type,
-                        message: messageObj,
-                    }
-                },
-                (err, res, body) =>
-                {
-                    if (err || (res.statusCode !== 200))
-                    {
-                        console.log(`bot.js:97 - Can\'t send the message objects for: ${recipientID}' — Err:`, err || body);
-                    }
-                    else
-                    {
-                        console.log('Sended message objects for:', recipientID);
-                    }
-                }
-            );
-        }, typingDelay * 1000);
-    }
-
-    sendTypingAction(recipientID)
-    {
-        request
-        (
-            {
-                method: 'POST',
-                url: process.env.MESSAGE_API,
-                qs: {access_token: this.#accessToken},
-                headers: {'Content-Type': 'application/json'},
-                json:
-                {
-                    "recipient": {"id": recipientID},
-                    "sender_action" :"typing_on"
-                }
-            },
-            (err, res, body) =>
-            {
-                if (err || (res.statusCode !== 200))
-                {
-                    console.log(`Can\'t send the Typing action for: ${recipientID}' — Err:`, err || body);
-                }
-                else
-                {
-                    console.log('Sended typing action for:', recipientID);
-                }
-            }
-        );
+            this.handlePostBack();
+            return;
+        }
+        if (this.isQuickReply === true)
+        {
+            this.handleQuickReply();
+            return;
+        }
+        if (this.receivedText !== undefined)
+        {
+            this.handlePlainText();
+            return;
+        }
     }
 
 
-
-    //  Creating profile for ChatBot page
-    createPersistentMenu(buttons, disabledComposer = false)
+    handlePlainText()
     {
-        request
-        (
-            {
-                method: 'POST',
-                url: process.env.PROFILE_API,
-                qs: {access_token: this.#accessToken},
-                headers: {'Content-Type': 'application/json'},
-                json:
-                {
-                    "persistent_menu":
-                    [
-                        {
-                            "locale": "default",
-                            "composer_input_disabled": disabledComposer,
-                            "call_to_actions": buttons
-                        }
-                    ]
-                }
-            },
-            (err, res, body) =>
-            {
-                if (err || (res.statusCode !== 200))
-                {
-                    console.log('Can\'t create the PersistentMenu buttons. Error:', err || body);
-                }
-                else
-                {
-                    console.log('Successfully create the PersistentMenu buttons. Result:', body);
-                }
-            }
-        );
+        let plain_text_handler = require('./message-handler/plaintext-handler');
+        plain_text_handler.handle(this);
     }
 
-    createGettingStarted()
+    handleUserReply()
     {
-        request
-        (
-            {
-                method: 'POST',
-                url: process.env.PROFILE_API,
-                qs: {access_token: this.#accessToken},
-                headers: {'Content-Type': 'application/json'},
-                json:
-                {
-                    "get_started":
-                    {
-                        "payload":"GET_STARTED"
-                    }
-                }
-            },
-            (err, res, body) =>
-            {
-                if (err || (res.statusCode !== 200))
-                {
-                    console.log('Can\'t create the Getstarted Payload. Error:', err || body);
-                }
-                else
-                {
-                    console.log('Successfully create the Getstarted Payload. Result:', body);
-                }
-            }
-        );
+        let user_reply_handler = require('./message-handler/user-reply-handler');
+        user_reply_handler.handle(this);
     }
 
-    createGreetingMessage(greetingContent)
+    handlePostBack()
     {
-        /** Allowed to use following phrases in the greetingContent:
-         * 
-         * {{user_first_name}}
-         * {{user_last_name}}
-         * {{user_full_name}}
-         * 
-         */
+        let postback_handler = require('./message-handler/postback-handler');
+        postback_handler.handle(this);
+    }
 
-        request
-        (
-            {
-                method: 'POST',
-                url: process.env.PROFILE_API,
-                qs: {access_token: this.#accessToken},
-                headers: {'Content-Type': 'application/json'},
-                json:
-                {
-                    "greeting":
-                    [
-                      {
-                        "locale":"default",
-                        "text": greetingContent
-                      }
-                    ]
-                }
-            },
-            (err, res, body) =>
-            {
-                if (err || (res.statusCode !== 200))
-                {
-                    console.log('Can\'t create the GreetingMessage. Error:', err || body);
-                }
-                else
-                {
-                    console.log('Successfully create the GreetingMessage. Result:', body);
-                }
-            }
-        );
+    handleQuickReply()
+    {
+        let quick_reply_handler = require('./message-handler/quick-reply-handler');
+        quick_reply_handler.handle(this);
     }
 
 }
-
-
 
 
 module.exports = Bot;
