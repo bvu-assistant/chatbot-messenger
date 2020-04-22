@@ -109,6 +109,17 @@ class Bot
         this.messageSender.sendSenderAction({recipientID: this.sender.ID, action: 'mark_seen'});
 
 
+        //  Ép sự kiện postback khi đang trong luồng Reply
+        if (this.sender.DoIng !== null)
+        {
+            if (this.isPostBack)
+            {
+                this.sender.replyFor = null;
+                this.sender.replyFor(null, null);
+            }
+        }
+
+
         if (this.sender.ReplyFor !== null)
         {
             this.handleUserReply();
