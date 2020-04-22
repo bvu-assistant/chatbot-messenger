@@ -114,7 +114,7 @@ class Bot
         {
             if (this.isPostBack)
             {
-                this.sender.replyFor = null;
+                this.sender.ReplyFor = null;
                 this.sender.replyFor(null, null);
             }
         }
