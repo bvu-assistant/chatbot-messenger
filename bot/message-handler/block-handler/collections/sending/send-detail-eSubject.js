@@ -10,7 +10,7 @@ async function send(cloner, pickedDate, pickedClass)
     let eFinder = require('../../../../../self_modules/elearning-finder');
 
 
-    bot.messageSender.sendText({recipientID: bot.sender.ID, content: `Đang tìm kiếm lịch E-Learning...\n\nNgày: ${pickedDate}.\nLớp: ${pickedClass}.`});
+    bot.messageSender.sendText({recipientID: bot.sender.ID, content: `Lịch E-Learning.\n\nNgày: ${pickedDate}.\nLớp: ${pickedClass}.`});
     let subjects = await eFinder.findELearningSchedule(pickedClass, pickedDate);
     let templates = await eFinder.renderElearningTemplate(subjects, pickedDate);
 
