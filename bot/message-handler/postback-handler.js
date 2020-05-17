@@ -60,21 +60,7 @@ async function handle(cloner)
 
         default:
             {
-                if (bot.payload.indexOf('ELEARNING_') !== -1)   //  Chọn vào ngày để tra cứu lịch học E-Learning
-                {
-                    let pickedDate = String(bot.payload).split('_')[1];
-                    bot.blocks.send_class_in_eDate.send(bot, pickedDate);   //  Hiển thị các lớp có trong ngày đó
-                }
-                else
-                {
-                    if (bot.payload.indexOf('GET_EL_') !== -1)
-                    {
-                        let pickedDate = bot.payload.split('_')[2];
-                        let pickedClass = bot.payload.split('_').splice(-1);
-
-                        bot.blocks.send_detail_eSubject.send(bot, pickedDate, pickedClass);
-                    }
-                }
+                
             }
     }
 }
