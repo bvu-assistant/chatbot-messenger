@@ -48,11 +48,6 @@ class BotProfile
                             "title":"Lịch học tuần này",
                             "type":"postback",
                             "payload":"NORMALSCHEDULE_LOOKINGUP"
-                        },
-                        {
-                            "title":"Lịch học E-Learning",
-                            "type":"postback",
-                            "payload":"ELEARNING_LOOKINGUP"
                         }
                     ]
                 },
