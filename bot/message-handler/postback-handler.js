@@ -40,12 +40,6 @@ async function handle(cloner)
                 break;
             }
         
-        case 'ELEARNING_LOOKINGUP':
-            {
-                bot.blocks.send_following_elearning.send(bot);
-                break;
-            }
-        
         case 'NORMALSCHEDULE_LOOKINGUP':
             {
                 bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Chức năng đang phát triển. Vui lòng quay lại sau.'});
