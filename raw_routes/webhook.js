@@ -44,43 +44,4 @@ router.post('/', async(req, res) =>
 
 
 
-router.post('/new-schedules', async(req, res) =>
-{
-    res.status(200).send('Oke');
-
-
-    try
-    {
-        let changes = Array.from(req.body.changes);
-        console.log('\n\nNew schedules:', changes, ' - length:', changes.length);
-        
-        let virtual_request = {
-            body:
-            {
-                entry:[{
-                    messaging:[{
-                        sender: { id: '1948499801941846' },
-                        recipient: { id: '103506241318268' },
-                        postback: { title: 'new-schedule', payload: 'NEW_ELEARNING_SCHEDULE' }
-                    }]
-                }]
-            }
-        };
-
-
-        // ------------------------------------------------------------------------------------------
-        const Bot = require('../bot/bot');
-        let bot = await new Bot(virtual_request);   //  initializing the bot may take quite much time
-
-        console.log('\n\n■■■ ', bot);
-        bot.process();
-        bot.blocks.inform_new_schedule.send(bot, changes);
-    }
-    catch (err)
-    {
-        console.log('\n\n\nError:', err);
-    }
-});
-
-
 module.exports = router;
