@@ -18,7 +18,7 @@ async function getLiability(studentID)
             {
                 if (err || (res.statusCode !== 200))
                 {
-                    return reject(err || body);
+                    return resolve('Student not found.');
                 }
 
 
