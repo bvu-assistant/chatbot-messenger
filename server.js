@@ -18,11 +18,14 @@ const webhook_routes = require('./raw_routes/webhook');
 app.use('/webhook', webhook_routes);
 
 
+
 //  routing to root page
 app.get('/', (req, res) =>
 {
     res.status(200).send('BVU Assistant ChatBot server running Oke.');
 });
+
+
 
 //  wakeupper from 'cronjob schedules' to prevent this server (after deployed on heroku) from sleeping
 app.get('/wakeupper', (req, res) =>

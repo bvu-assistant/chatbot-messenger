@@ -60,7 +60,7 @@ async function getRawTestSchedule(studentID)
         {
             request({
                 method: 'GET',
-                url: `https://bvu-seacher.herokuapp.com/?method=ViewTestSchedule&id=${studentID}`
+                url: `https://bvu-seacher.herokuapp.com/?method=2&id=${studentID}`
             },
             (err, res, body) =>
             {

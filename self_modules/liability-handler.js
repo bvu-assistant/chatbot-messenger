@@ -12,7 +12,7 @@ async function getLiability(studentID)
         {
             request({
                 method: 'GET',
-                url: `${process.env.SEARCHER_HOST}/?method=ViewLiabilities&id=${studentID}`
+                url: `${process.env.SEARCHER_HOST}/?method=1&id=${studentID}`
             },
             (err, res, body) =>
             {

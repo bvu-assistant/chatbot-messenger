@@ -81,13 +81,14 @@ class BotProfile
     {
         try
         {
+            // Pre-defined by Facebook's API
             const attrs = {
-                firstname: '{{user_first_name}}', 
-                lastname: '{{user_last_name}}', 
-                fullname: '{{user_full_name}}'
+                firstName: '{{user_first_name}}', 
+                lastName: '{{user_last_name}}', 
+                fullName: '{{user_full_name}}'
             };
 
-            let greetingMessage = `Xin chào ${attrs.firstname}. Đây là trang thông báo tin tức và lịch học - lịch thi cho sinh viên BVU.`;
+            let greetingMessage = `Xin chào ${attrs.firstName}. Đây là trang thông báo tin tức và lịch học - lịch thi cho sinh viên BVU.`;
             this.createGreetingMessage({greetingContent: greetingMessage});
         }
         catch (err)

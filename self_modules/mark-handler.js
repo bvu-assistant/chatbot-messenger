@@ -42,7 +42,7 @@ async function getSummaryMark(studentID)
         {
             request({
                 method: 'GET',
-                uri: `${process.env.SEARCHER_HOST}/?method=ViewMarks&id=${studentID}`
+                uri: `${process.env.SEARCHER_HOST}/?method=0&id=${studentID}`
             },
             (err, res, body) =>
             {
