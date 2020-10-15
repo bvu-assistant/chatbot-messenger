@@ -97,7 +97,7 @@ class Bot
             this.waitingFor = this.sender.info.session.payload;
             if (this.sender.info.session.payload !== null &&
                  this.sender.info.session.payload !== '') {
-                this.sender.info.session.last_response = this.receivedText;
+                this.sender.info.session.last_response = this.receivedText || '';
                 this.sender.updateSelf();
             }
 

@@ -17,12 +17,7 @@ async function handle(cloner)
                 {
                     case 'TESTSCHEDULE_LOOKINGUP':
                         {
-                            console.log('\nLooking up for test schedule');
                             bot.blocks.send_test_schedule.send(bot, bot.sender.info.session.last_response);
-                            bot.sender.info.session.last_response = "";
-                            bot.sender.info.session.payload = "";
-                            bot.sender.info.session.reply_for = "";
-                            bot.sender.updateSelf();
                             break;
                         }
                     
@@ -42,4 +37,9 @@ async function handle(cloner)
                 break;
             }
     }
+
+    bot.sender.info.session.last_response = "";
+    bot.sender.info.session.payload = "";
+    bot.sender.info.session.reply_for = "";
+    bot.sender.updateSelf();
 }
