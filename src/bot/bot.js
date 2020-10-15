@@ -1,8 +1,10 @@
 require('dotenv').config();
 const profileHanlder = require('./bot-profile-handler');
 const messageSender = require('./message-handler/message-sender');
-const blocks_handler = require('./message-handler/block-handler/blocks-handler');
-const facebook_user = require('../facebook_user/user');
+const messageBuilder = require('./message-handler/message-builder');
+const blocks_handler = require('./blocks/blocks-handler');
+const facebook_user = require('../models/user');
+const firebaseAdmin = require('../self_modules/firebase/firebase-instance');
 
 
 class Bot
@@ -19,7 +21,6 @@ class Bot
         this.profileHandler = new profileHanlder();
         this.messageSender = new messageSender();
         this.blocks = blocks_handler;
-        this.selfID = process.env.SELF_ID;
         this.is_echo = false;
         this.hasMessage = false;
         this.isPostBack = false;
@@ -31,6 +32,7 @@ class Bot
         this.attachments = undefined;
         this.sender = undefined;
         this.waitingFor = undefined;
+        this.builder = new messageBuilder();
 
 
         return new Promise( async(resolve, reject) =>
@@ -92,9 +94,12 @@ class Bot
 
 
             this.sender = await new facebook_user(senderID);  //  Lấy thông tin User cần nhiều thời gian
-            this.waitingFor = this.sender.ReplyFor;
-            if (this.sender.ReplyFor !== null)
-                this.sender.LastResponse = this.receivedText;
+            this.waitingFor = this.sender.info.session.payload;
+            if (this.sender.info.session.payload !== null &&
+                 this.sender.info.session.payload !== '') {
+                this.sender.info.session.last_response = this.receivedText;
+                this.sender.updateSelf();
+            }
 
             return resolve(this);
         });
@@ -109,32 +114,35 @@ class Bot
         this.messageSender.sendSenderAction({recipientID: this.sender.ID, action: 'mark_seen'});
 
 
-        //  Ép sự kiện postback khi đang trong luồng Reply
-        if (this.sender.DoIng !== null)
-        {
-            if (this.isPostBack)
-            {
-                this.sender.ReplyFor = null;
-                this.sender.replyFor(null, null);
-            }
-        }
+        //  ghi đè sự kiện postback khi đang trong luồng Reply
+        // if (this.sender.info.session.payload !== null)
+        // {
+        //     if (this.isPostBack)
+        //     {
+        //         this.sender.ReplyFor = null;
+        //         this.sender.replyFor(null, null);
+        //     }
+        // }
 
 
-        if (this.sender.ReplyFor !== null)
+        if (this.sender.info.session.payload !== null && this.sender.info.session.payload !== '')
         {
             this.handleUserReply();
             return;
         }
+
         if (this.isPostBack === true)
         {
             this.handlePostBack();
             return;
         }
+
         if (this.isQuickReply === true)
         {
             this.handleQuickReply();
             return;
         }
+
         if (this.receivedText !== undefined)
         {
             this.handlePlainText();

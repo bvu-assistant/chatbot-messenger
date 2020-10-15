@@ -12,7 +12,7 @@ async function handle(cloner)
     {
         case 'GET_STARTED':
             {
-                bot.blocks.getstarted_message.send(bot);
+                bot.blocks.reply_to_hi.send(bot);
                 break;
             }
         

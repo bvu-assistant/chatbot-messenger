@@ -1,8 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const Builder = require('../bot/message-handler/message-builder');
-const elearningFinder = require('./elearning-finder');
-
+require('dotenv/config');
 
 
 async function renderTestScheduleTemplate(studentID)
@@ -43,6 +42,7 @@ async function renderTestScheduleTemplate(studentID)
             });
 
 
+            console.log(schedules.length);
             return resolve(schedules);
         });
     }
@@ -60,13 +60,13 @@ async function getRawTestSchedule(studentID)
         {
             request({
                 method: 'GET',
-                url: `https://bvu-seacher.herokuapp.com/?method=2&id=${studentID}`
+                url: `${process.env.SEARCHER_HOST}/?method=2&id=${studentID}`
             },
             (err, res, body) =>
             {
                 if (err || (res.statusCode !== 200))
                 {
-                    return reject(err || body);
+                    return resolve([]);
                 }
 
 
@@ -81,4 +81,4 @@ async function getRawTestSchedule(studentID)
 }
 
 
-module.exports = { renderTestScheduleTemplate, elearningFinder }
+module.exports = { renderTestScheduleTemplate }

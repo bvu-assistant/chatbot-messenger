@@ -8,6 +8,10 @@ async function handle(cloner)
     console.log('Bot cloned to "plaintext-handler".');
 
 
+    //  đánh dấu đã xem cho mọi tin nhắn văn bản gửi cho Bot
+    bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'mark_seen'});
+
+
     switch (bot.receivedText)
     {
         case 'sPM':
@@ -15,7 +19,7 @@ async function handle(cloner)
                 bot.profileHandler.setupPersistentMenu()
                     .then(() =>
                     {
-                        bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Đã cập nhật Persistent Menu.'})
+                        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đã cập nhật Persistent Menu.'})
                     })
                     .catch(err =>
                         {
@@ -28,7 +32,7 @@ async function handle(cloner)
                 bot.profileHandler.setupGreetingMessage()
                     .then(() =>
                     {
-                        bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Đã cập nhật Greeting Message.'})
+                        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đã cập nhật Greeting Message.'})
                     })
                     .catch(err =>
                         {
@@ -57,7 +61,7 @@ async function handle(cloner)
         case 'gaui':
             {
                 let usersID = Array.from(await bot.sender.getAllUsersID());
-                bot.messageSender.sendText({recipientID: bot.sender.ID, content: `Có ${usersID.length} người dùng.`});
+                bot.messageSender.sendText({recipientID: bot.sender.id, content: `Có ${usersID.length} người dùng.`});
                 break;
             }
         

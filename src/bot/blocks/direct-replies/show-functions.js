@@ -1,13 +1,11 @@
 module.exports = { send }
-const MessageBuilder = require('../../../message-builder');
-const builder = new MessageBuilder();
 
 
 async function send(cloner)
 {
-    const Bot = require('../../../../bot');
+    const Bot = require('../../bot');
     let bot = await new Bot(null, cloner);
-
+    let builder = bot.builder;
 
 
     let buttonBlock_1 = [
@@ -34,7 +32,7 @@ async function send(cloner)
 
 
     
-    bot.messageSender.sendMessageObject({recipientID: bot.sender.ID, messageObj: newsLookingUp_button_template});
-    bot.messageSender.sendMessageObject({recipientID: bot.sender.ID, messageObj: scheduleLookingUp_button_template});
-    bot.messageSender.sendMessageObject({recipientID: bot.sender.ID, messageObj: infoLookingUp_button_template});
+    bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: newsLookingUp_button_template});
+    bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: scheduleLookingUp_button_template});
+    bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: infoLookingUp_button_template});
 }

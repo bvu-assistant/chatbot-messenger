@@ -1,7 +1,10 @@
 "use strict";
 
-const router = require('express').Router();
+
 require('dotenv/config');
+const router = require('express').Router();
+const Bot = require('../bot/bot');
+
 
 
 
@@ -19,21 +22,21 @@ router.get('/', (req, res) =>
 });
 
 
+
 //  When Facebook webhook send we a request --- typically when user send message to the bot
 router.post('/', async(req, res) =>
 {
     //  Firstly, confirm with Facebook that we have received the request
     res.status(200).send('Oke.');
     console.log('\n\n———————————————————————————————————————————————————————————————————————————————');
-    console.log('■■■ Received request from Facebook webhook.');
+    console.log('■■■ Have just received request from Facebook webhook.');
 
 
     try
     {
-        const Bot = require('../bot/bot');
         let bot = await new Bot(req);   //  initializing the bot may take quite much time
 
-        console.log('\n\n■■■ ', bot);
+        console.log('\n\n■■■ ', bot, bot.sender.info.session, '\n');
         bot.process();
     }
     catch (error)

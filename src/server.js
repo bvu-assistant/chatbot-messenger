@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-//  Add '/webhook' middleware
-const webhook_routes = require('./raw_routes/webhook');
-app.use('/webhook', webhook_routes);
+//  Add middlewares
+app.use('/webhook', require('./routes/webhook'));
+// app.use('/login', require('./routes/login'));
 
 
 

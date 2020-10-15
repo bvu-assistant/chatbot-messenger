@@ -8,28 +8,33 @@ async function handle(cloner)
     console.log('Bot cloned to "user-reply-handler".');
 
 
-    switch (bot.sender.ReplyFor)
+    switch (bot.sender.info.session.reply_for)
     {
         case 'StudentID':
             {
-                await bot.sender.replyFor(null, null);
-                switch (bot.sender.DoIng)
+
+                switch (bot.sender.info.session.payload)
                 {
                     case 'TESTSCHEDULE_LOOKINGUP':
                         {
-                            bot.blocks.send_test_schedule.send(bot, bot.sender.LastResponse);
+                            console.log('\nLooking up for test schedule');
+                            bot.blocks.send_test_schedule.send(bot, bot.sender.info.session.last_response);
+                            bot.sender.info.session.last_response = "";
+                            bot.sender.info.session.payload = "";
+                            bot.sender.info.session.reply_for = "";
+                            bot.sender.updateSelf();
                             break;
                         }
                     
                     case 'LIABILITY_LOOKINGUP':
                         {
-                            bot.blocks.send_liability.send(bot, bot.sender.LastResponse);
+                            bot.blocks.send_liability.send(bot, bot.sender.info.session.last_response);
                             break;
                         }
                     
                     case 'MARKS_LOOKINGUP':
                         {
-                            bot.blocks.send_summary_marks.send(bot, bot.sender.LastResponse);
+                            bot.blocks.send_summary_marks.send(bot, bot.sender.info.session.last_response);
                             break;
                         }
                 }
