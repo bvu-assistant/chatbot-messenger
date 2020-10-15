@@ -115,14 +115,14 @@ class Bot
 
 
         //  ghi đè sự kiện postback khi đang trong luồng Reply
-        // if (this.sender.info.session.payload !== null)
-        // {
-        //     if (this.isPostBack)
-        //     {
-        //         this.sender.ReplyFor = null;
-        //         this.sender.replyFor(null, null);
-        //     }
-        // }
+        if (this.sender.info.session.payload !== null)
+        {
+            if (this.isPostBack)
+            {
+                this.sender.info.session.reply_for = '';
+                this.sender.updateSelf();
+            }
+        }
 
 
         if (this.sender.info.session.payload !== null && this.sender.info.session.payload !== '')

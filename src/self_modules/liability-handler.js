@@ -38,7 +38,7 @@ async function renderLiabilityTemplate(studentID)
     try
     {
         let liability = await getLiability(studentID);
-        if (liability.length === 2)
+        if (liability === 'Student not found.')
         {
             return {text: 'Không tìm được công nợ.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'};
         }
