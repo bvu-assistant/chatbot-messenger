@@ -3,6 +3,7 @@ module.exports = { renderHeadlinesTemplate, renderStudentNewsTemplate }
 const request = require('request');
 const cheerio = require('cheerio');
 const Builder = require('../bot/message-handler/message-builder');
+require('dotenv/config');
 
 
 
@@ -20,17 +21,18 @@ async function renderHeadlinesTemplate()
         for (let i = 0; i < items.length && i < 10; ++i)
         {
             let currItem = items[i];
+            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link}`;
 
             let generic = builder.createGeneric({
                 title: currItem.Title,
                 subtitle: currItem.Date,
                 image_url: 'https://i.imgur.com/okwgAyw.jpg',
                 default_action: builder.createDefaultAction({
-                    url: currItem.Link
+                    url: view_url
                 }),
                 buttons: builder.createButton({
                     type: 'web_url',
-                    url: currItem.Link,
+                    url: view_url,
                     title: 'Xem'
                 })
             });
@@ -63,17 +65,18 @@ async function renderStudentNewsTemplate()
         for (let i = 0; i < items.length && i < 10; ++i)
         {
             let currItem = items[i];
+            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link}`;
 
             let generic = builder.createGeneric({
                 title: currItem.Title,
                 subtitle: currItem.Date,
                 image_url: 'https://i.imgur.com/5VXoz0L.jpg',
                 default_action: builder.createDefaultAction({
-                    url: currItem.Link
+                    url: view_url
                 }),
                 buttons: builder.createButton({
                     type: 'web_url',
-                    url: currItem.Link,
+                    url: view_url,
                     title: 'Xem'
                 })
             });
