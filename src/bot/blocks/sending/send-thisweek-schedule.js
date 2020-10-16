@@ -10,7 +10,7 @@ async function send(cloner, studentID)
 
     
     bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'mark_seen'});
-    bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Processing...', typingDelay: 1.35});
+    bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đang xử lý...', typingDelay: 1.35});
 
 
     let messages = await normalScheduleHandler.renderThisWeekSchedulesMessage(studentID);
@@ -18,7 +18,7 @@ async function send(cloner, studentID)
 
     
     if (messages.length === 0) {
-        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'No result...', typingDelay: 1.35});
+        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: 1.35});
     }
     else {
         messages.forEach((value, index) => {

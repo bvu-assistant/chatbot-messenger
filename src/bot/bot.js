@@ -94,9 +94,11 @@ class Bot
 
 
             this.sender = await new facebook_user(senderID);  //  Lấy thông tin User cần nhiều thời gian
+
+
             this.waitingFor = this.sender.info.session.payload;
             if (this.sender.info.session.payload !== null &&
-                 this.sender.info.session.payload !== '') {
+                this.sender.info.session.payload !== '') {
                 this.sender.info.session.last_response = this.receivedText || '';
                 this.sender.updateSelf();
             }
@@ -114,21 +116,18 @@ class Bot
         this.messageSender.sendSenderAction({recipientID: this.sender.ID, action: 'mark_seen'});
 
 
-        //  ghi đè sự kiện postback khi đang trong luồng Reply
-        if (this.sender.info.session.payload !== null)
+        if (this.sender.info.session.payload !== null && this.sender.info.session.payload !== '')
         {
+            //  ghi đè sự kiện postback khi đang trong luồng Reply
             if (this.isPostBack)
             {
                 this.sender.info.session.reply_for = '';
                 this.sender.updateSelf();
             }
-        }
-
-
-        if (this.sender.info.session.payload !== null && this.sender.info.session.payload !== '')
-        {
-            this.handleUserReply();
-            return;
+            else {
+                this.handleUserReply();
+                return;
+            }
         }
 
         if (this.isPostBack === true)
