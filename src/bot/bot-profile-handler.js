@@ -25,12 +25,12 @@ class BotProfile
                     "title": "Tin tức",
                     "call_to_actions":[
                         {
-                            "title":"Tin chính",
+                            "title":"📰 Tin chính",
                             "type":"postback",
                             "payload":"HEADLINE_LOOKINGUP"
                         },
                         {
-                            "title":"Tin sinh viên",
+                            "title":"📢 Tin sinh viên",
                             "type":"postback",
                             "payload":"STUDENTNEWS_LOOKINGUP"
                         }]
@@ -40,14 +40,19 @@ class BotProfile
                     "type":"nested",
                     "call_to_actions":[
                         {
-                            "title":"Lịch thi",
+                            "title":"📝 Lịch thi",
                             "type":"postback",
                             "payload":"TESTSCHEDULE_LOOKINGUP"
                         },
                         {
-                            "title":"Lịch học tuần này",
+                            "title":"📚 Lịch học tuần này",
                             "type":"postback",
-                            "payload":"NORMALSCHEDULE_LOOKINGUP"
+                            "payload":"THISWEEKSCHEDULE_LOOKINGUP"
+                        },
+                        {
+                            "title":"📖 Lịch học hôm nay",
+                            "type":"postback",
+                            "payload":"TODAYSCHEDULE_LOOKINGUP"
                         }
                     ]
                 },
@@ -56,12 +61,12 @@ class BotProfile
                     "title": "Tra cứu thông tin",
                     "call_to_actions":[
                         {
-                            "title":"Công nợ",
+                            "title":"💵 Công nợ",
                             "type":"postback",
                             "payload":"LIABILITY_LOOKINGUP"
                         },
                         {
-                            "title":"Điểm học tập",
+                            "title":"💯 Điểm học tập",
                             "type":"postback",
                             "payload":"MARKS_LOOKINGUP"
                         }

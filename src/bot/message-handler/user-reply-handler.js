@@ -32,6 +32,18 @@ async function handle(cloner)
                             bot.blocks.send_summary_marks.send(bot, bot.sender.info.session.last_response);
                             break;
                         }
+
+                    case 'THISWEEKSCHEDULE_LOOKINGUP':
+                        {
+                            bot.blocks.send_thisweek_schedule.send(bot, bot.sender.info.session.last_response);
+                            break;
+                        }
+
+                    case 'TODAYSCHEDULE_LOOKINGUP':
+                        {
+                            bot.blocks.send_today_schedule.send(bot, bot.sender.info.session.last_response);
+                            break;
+                        }
                 }
 
                 break;

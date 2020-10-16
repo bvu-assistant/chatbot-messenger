@@ -16,33 +16,39 @@ async function handle(cloner)
                 break;
             }
         
+
         case 'HEADLINE_LOOKINGUP':
             {
                 bot.blocks.show_headlines.send(bot);
                 break;
             }
-
         case 'STUDENTNEWS_LOOKINGUP':
             {
                 bot.blocks.show_studentNews.send(bot);
                 break;
             }
         
+
         case 'TESTSCHEDULE_LOOKINGUP':
             {
                 bot.blocks.get_student_id.send(bot, 'TESTSCHEDULE_LOOKINGUP');
                 break;
             }
+        case 'THISWEEKSCHEDULE_LOOKINGUP':
+            {
+                bot.blocks.get_student_id.send(bot, 'THISWEEKSCHEDULE_LOOKINGUP');
+                break;
+            }
+        case 'TODAYSCHEDULE_LOOKINGUP':
+            {
+                bot.blocks.get_student_id.send(bot, 'TODAYSCHEDULE_LOOKINGUP');
+                break;
+            }
+
 
         case 'LIABILITY_LOOKINGUP':
             {
                 bot.blocks.get_student_id.send(bot, 'LIABILITY_LOOKINGUP');
-                break;
-            }
-        
-        case 'NORMALSCHEDULE_LOOKINGUP':
-            {
-                bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Chức năng đang phát triển. Vui lòng quay lại sau.'});
                 break;
             }
         case 'MARKS_LOOKINGUP':
@@ -50,6 +56,7 @@ async function handle(cloner)
                 bot.blocks.get_student_id.send(bot, 'MARKS_LOOKINGUP');
                 break;
             }
+            
 
         case 'NEW_ELEARNING_SCHEDULE':
             {

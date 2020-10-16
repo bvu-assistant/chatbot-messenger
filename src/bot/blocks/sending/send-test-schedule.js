@@ -14,7 +14,7 @@ async function send(cloner, studentID)
     let testScheduleTemplate = Array.from(await scheduleHandler.renderTestScheduleTemplate(studentID));
 
 
-    await testScheduleTemplate.forEach((value, index) =>
+    testScheduleTemplate.forEach((value, index) =>
     {
         (()=> {
             setTimeout(() => {

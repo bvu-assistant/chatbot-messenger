@@ -6,6 +6,8 @@ let show_functions              = require('./direct-replies/show-functions');
 let show_headlines              = require('./sending/send-headlines');
 let show_studentNews            = require('./sending/send-student-news');
 let send_test_schedule          = require('./sending/send-test-schedule');
+let send_thisweek_schedule      = require('./sending/send-thisweek-schedule');
+let send_today_schedule         = require('./sending/send-today-schedule');
 let send_liability              = require('./sending/send-liability');
 let send_summary_marks          = require('./sending/send-summary-marks');
 
@@ -16,9 +18,11 @@ let continue_test_schedule      = require('./quick-replies/continue-testschedule
 
 module.exports = 
 {
-    defaut_answer, reply_to_hi,show_functions, 
+    defaut_answer, reply_to_hi, show_functions, 
 
-    show_headlines, show_studentNews, send_test_schedule, send_liability, send_summary_marks, 
+    show_headlines, show_studentNews, 
+    send_liability, send_summary_marks, 
+    send_test_schedule, send_thisweek_schedule, send_today_schedule,
 
     get_student_id, 
     continue_test_schedule

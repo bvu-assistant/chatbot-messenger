@@ -57,13 +57,6 @@ async function handle(cloner)
                 bot.blocks.reply_to_hi.send(bot);
                 break;
             }
-
-        case 'gaui':
-            {
-                let usersID = Array.from(await bot.sender.getAllUsersID());
-                bot.messageSender.sendText({recipientID: bot.sender.id, content: `Có ${usersID.length} người dùng.`});
-                break;
-            }
         
         default:
             {

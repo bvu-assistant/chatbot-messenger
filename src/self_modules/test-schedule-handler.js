@@ -1,6 +1,4 @@
 const request = require('request');
-const cheerio = require('cheerio');
-const Builder = require('../bot/message-handler/message-builder');
 require('dotenv/config');
 
 

@@ -18,11 +18,11 @@ async function renderSummaryMarks(studentID)
 
         // console.log(summaryMarks);
         let response = '';
-        response = response.concat(`${summaryMarks.FullName} — ${summaryMarks.ID}.\n\n`);
-        response = response.concat(`Tín chỉ đã học: ${summaryMarks.TotalCredits}.\n`);
-        response = response.concat(`Điểm trung bình: ${summaryMarks.AverageMark}.\n`);
-        response = response.concat(`Tín chỉ đang nợ: ${summaryMarks.BorrowedCredits}.\n`);
-        response = response.concat(`Xếp loại tốt nghiệp: ${summaryMarks.GraduatingRank || 'Chưa'}.`);
+        response = response.concat(`${summaryMarks.InFo.FullName} — ${summaryMarks.InFo.ID}.\n\n`);
+        response = response.concat(`Tín chỉ đã đăng ký: ${summaryMarks.SummaryTable.TotalCredits}.\n`);
+        response = response.concat(`Tín chỉ đang nợ: ${summaryMarks.SummaryTable.BorrowedCredits}.\n\n`);
+        response = response.concat(`Điểm tích luỹ: ${summaryMarks.SummaryTable.AverageMark}.\n`);
+        response = response.concat(`Xếp loại tốt nghiệp: ${summaryMarks.SummaryTable.GraduatingRank || 'Chưa'}.`);
 
         // console.log('response:', response);
         return {text: response};
@@ -48,12 +48,13 @@ async function getSummaryMark(studentID)
             {
                 if (err || (res.statusCode !== 200))
                 {
-                    return reject(err || body);
+                    console.log(err || body);
+                    return resolve(undefined);
                 }
 
 
                 // console.log(body);
-                return resolve((body.length === 2) ? undefined: (JSON.parse(body).SummaryTable));
+                return resolve((body.length === 2) ? undefined: (JSON.parse(body)));
             });
         });
     }   
