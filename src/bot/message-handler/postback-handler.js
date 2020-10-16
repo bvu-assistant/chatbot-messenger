@@ -44,6 +44,11 @@ async function handle(cloner)
                 bot.blocks.get_student_id.send(bot, 'TODAYSCHEDULE_LOOKINGUP');
                 break;
             }
+        case 'TOMORROWSCHEDULE_LOOKINGUP':
+            {
+                bot.blocks.get_student_id.send(bot, 'TOMORROWSCHEDULE_LOOKINGUP');
+                break;
+            }
 
 
         case 'LIABILITY_LOOKINGUP':

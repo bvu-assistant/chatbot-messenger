@@ -44,6 +44,12 @@ async function handle(cloner)
                             bot.blocks.send_today_schedule.send(bot, bot.sender.info.session.last_response);
                             break;
                         }
+                        
+                    case 'TOMORROWSCHEDULE_LOOKINGUP':
+                        {
+                            bot.blocks.send_tomorrow_schedule.send(bot, bot.sender.info.session.last_response);
+                            break;
+                        }
                 }
 
                 break;

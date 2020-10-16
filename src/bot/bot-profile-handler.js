@@ -57,6 +57,11 @@ class BotProfile
                     ]
                 },
                 {
+                    "title":"📖 Lịch học ngày mai",
+                    "type":"postback",
+                    "payload":"TOMORROWSCHEDULE_LOOKINGUP"
+                },
+                {
                     "type": "nested",
                     "title": "Tra cứu thông tin",
                     "call_to_actions":[
