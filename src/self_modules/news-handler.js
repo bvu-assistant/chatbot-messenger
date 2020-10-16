@@ -28,13 +28,20 @@ async function renderHeadlinesTemplate()
                 subtitle: currItem.Date,
                 image_url: 'https://i.imgur.com/okwgAyw.jpg',
                 default_action: builder.createDefaultAction({
-                    url: view_url
+                    url: currItem.Link
                 }),
-                buttons: builder.createButton({
-                    type: 'web_url',
-                    url: view_url,
-                    title: 'Xem'
-                })
+                buttons: [
+                    builder.createButton({
+                        type: 'web_url',
+                        url: currItem.Link,
+                        title: 'Truy cập'
+                    }),
+                    builder.createButton({
+                        type: 'web_url',
+                        url: view_url,
+                        title: 'Xem nhanh'
+                    }),
+                ]
             });
 
             generics.push(generic);
@@ -72,13 +79,20 @@ async function renderStudentNewsTemplate()
                 subtitle: currItem.Date,
                 image_url: 'https://i.imgur.com/5VXoz0L.jpg',
                 default_action: builder.createDefaultAction({
-                    url: view_url
+                    url: currItem.Link
                 }),
-                buttons: builder.createButton({
-                    type: 'web_url',
-                    url: view_url,
-                    title: 'Xem'
-                })
+                buttons: [
+                    builder.createButton({
+                        type: 'web_url',
+                        url: currItem.Link,
+                        title: 'Truy cập'
+                    }),
+                    builder.createButton({
+                        type: 'web_url',
+                        url: view_url,
+                        title: 'Xem nhanh'
+                    }),
+                ]
             });
 
             generics.push(generic);
