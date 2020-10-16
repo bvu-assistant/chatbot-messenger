@@ -53,13 +53,13 @@ class BotProfile
                             "title":"📖 Lịch học hôm nay",
                             "type":"postback",
                             "payload":"TODAYSCHEDULE_LOOKINGUP"
+                        },
+                        {
+                            "title":"🔆 Lịch học ngày mai",
+                            "type":"postback",
+                            "payload":"TOMORROWSCHEDULE_LOOKINGUP"
                         }
                     ]
-                },
-                {
-                    "title":"📖 Lịch học ngày mai",
-                    "type":"postback",
-                    "payload":"TOMORROWSCHEDULE_LOOKINGUP"
                 },
                 {
                     "type": "nested",
@@ -76,7 +76,7 @@ class BotProfile
                             "payload":"MARKS_LOOKINGUP"
                         }
                     ]
-                },
+                }
             ];
 
             this.createPersistentMenu({buttons: buttons});

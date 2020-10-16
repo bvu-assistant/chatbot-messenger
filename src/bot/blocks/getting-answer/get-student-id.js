@@ -15,7 +15,7 @@ async function send(cloner, doing)
         bot.sender.updateSelf()
         bot.messageSender.sendText({
             recipientID: bot.sender.id, 
-            content: 'Nhập mã sinh viên.\n\n Ví dụ: 18033747',
+            content: 'Nhập mã sinh viên.\n\nVí dụ: 18033747',
             typingDelay: 1.25
         });
     }

@@ -25,7 +25,7 @@ async function send(cloner)
 
     let buttonBlock_3 = [
         builder.createButton({type: 'postback', payload: 'TODAYSCHEDULE_LOOKINGUP', title: '📖 Lịch học hôm nay'}),
-        builder.createButton({type: 'postback', payload: 'TOMORROWSCHEDULE_LOOKINGUP', title: '📖 Lịch học ngày mai'})
+        builder.createButton({type: 'postback', payload: 'TOMORROWSCHEDULE_LOOKINGUP', title: '🔅 Lịch học ngày mai'})
     ];
     let scheduleLookingUp_button_template_1 = builder.createButtonTemplate({title: 'Tra cứu lịch học', buttons: buttonBlock_3});
 
