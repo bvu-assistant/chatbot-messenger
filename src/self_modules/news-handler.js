@@ -21,7 +21,7 @@ async function renderHeadlinesTemplate()
         for (let i = 0; i < items.length && i < 10; ++i)
         {
             let currItem = items[i];
-            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link}`;
+            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link.split('?NewsID=')[1]}`;
 
             let generic = builder.createGeneric({
                 title: currItem.Title,
@@ -65,7 +65,7 @@ async function renderStudentNewsTemplate()
         for (let i = 0; i < items.length && i < 10; ++i)
         {
             let currItem = items[i];
-            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link}`;
+            let view_url = `${process.env.VIEWER_HOST}/${currItem.Link.split('?NewsID=')[1]}`;
 
             let generic = builder.createGeneric({
                 title: currItem.Title,
