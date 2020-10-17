@@ -21,5 +21,20 @@ async function handle(cloner)
                 bot.blocks.get_student_id.send(bot, 'SAVING_ID');
                 break;
             }
+
+        case 'DELETE_SAVING_ID':
+            {
+                bot.sender.info.studentId = '';
+                bot.sender.updateSelf()
+                    .then(() => {
+                        bot.messageSender.sendText({recipientID: bot.sender.id, content: '✔️ Đã xoá bỏ mã sinh viên của bạn.', typingDelay: 1.35});
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        bot.messageSender.sendText({recipientID: bot.sender.id, content: '❌ Có lỗi xảy ra.', typingDelay: 1.35});
+                    });
+
+                break;
+            }
     }
 }

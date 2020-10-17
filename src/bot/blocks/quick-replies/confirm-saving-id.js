@@ -22,6 +22,16 @@ async function send(cloner, reset = false)
         })
     ];
 
+
+    if (reset) {
+        quickrelies.push(bot.builder.createQuickReply({
+            title: 'Xoá mã',
+            content_type: 'text',
+            image_url: 'https://tinyurl.com/y3of838b',
+            payload: 'DELETE_SAVING_ID'
+        }));
+    }
+
     
     let quickReplyTemplate = bot.builder.createQuickRepliesTemplate({title: reset? 'Đặt lại mã sinh viên ?': 'Tiến hành đặt Mã Sinh viên ?', quickReplies: quickrelies});
     setTimeout(() => {
