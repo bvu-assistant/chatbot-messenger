@@ -20,6 +20,10 @@ async function send(cloner, studentID)
         }, 2000 + index * 750);
     });
 
+    if (testScheduleTemplate.length === 0) {
+        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: 2.5});
+    }
+
 
     setTimeout(() => {
         bot.blocks.continue_test_schedule.send(bot);
