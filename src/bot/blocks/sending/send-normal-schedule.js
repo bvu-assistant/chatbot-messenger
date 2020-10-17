@@ -25,7 +25,7 @@ async function send({cloner, studentId, type = nsh.ScheduleType.TODAY})
         }, 2000 + index * 750);
     });
 
-    if (messages.length === 1) {
+    if (messages.length === 0 || messages.length === 1) {
         bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: (2500 + messages.length * 750)/1000});
     }
 }
