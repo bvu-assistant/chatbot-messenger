@@ -12,7 +12,7 @@ async function send({cloner, studentId, type = nsh.ScheduleType.TODAY})
     bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đang xử lý...', typingDelay: 1.35});
     setTimeout(() => {
         bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'typing_on'});
-    }, 750);
+    }, 2000);
 
 
     let messages = await nsh.renderNormalSchedulesTemplate({studentId: studentId, type: type});
