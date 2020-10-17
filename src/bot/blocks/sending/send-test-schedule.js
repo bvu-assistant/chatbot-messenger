@@ -29,5 +29,5 @@ async function send(cloner, studentID)
 
     setTimeout(() => {
         bot.blocks.continue_test_schedule.send(bot);
-    }, 3000 + testScheduleTemplate.length * 750);
+    }, 2750 + testScheduleTemplate.length * 750);
 }
