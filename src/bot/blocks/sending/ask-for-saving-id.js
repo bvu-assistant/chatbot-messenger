@@ -11,13 +11,13 @@ async function send(cloner)
         bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
         setTimeout(() => {
             bot.blocks.continue_saving_id.send(bot);
-        }, 1750);
+        }, 1000);
     }
     else {
         let info = `Mã sinh viên của bạn: ${bot.sender.info.studentId}`;
         bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
         setTimeout(() => {
             bot.blocks.continue_saving_id.send(bot, true);
-        }, 1750);
+        }, 1000);
     }
 }
