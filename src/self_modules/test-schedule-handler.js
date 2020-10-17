@@ -1,3 +1,4 @@
+module.exports = { renderTestScheduleTemplate }
 const request = require('request');
 require('dotenv/config');
 
@@ -6,47 +7,48 @@ async function renderTestScheduleTemplate(studentID)
 {
     try
     {
-        return new Promise( async(resolve, reject) =>
-        {
-            let rawSchedules = await getRawTestSchedule(studentID);
-            if (Array.from(rawSchedules).length === 0)
-            {
-                return resolve([{text: 'Không tìm được lịch thi.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'}]);
+        let json = await getRawTestSchedule(studentID);
+        switch (json) {
+            case 'Student not found.': {
+                return ({text: 'Không tìm được lịch thi.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
             }
+            case undefined: //  lỗi xử lý từ hàm getRawTestSchedule()
+                return ({text: process.env.ERROR_MESSAGE});
+        }
 
 
-            let schedules = [];
-            let jsonSchedule = Array.from(rawSchedules);
-            let detailSchedule = Array.from(jsonSchedule[1]);
-            let indentifier = jsonSchedule[0];
+        let schedules = [];
+        let jsonSchedule = json;
+        let detailSchedule = Array.from(jsonSchedule.details);
+        let indentifier = jsonSchedule.info;
 
 
-            schedules.push({text: `Mã sinh viên: ${indentifier.ID}.\nTên: ${indentifier.FullName}.\nHọc kỳ: ${indentifier.Term}.`});
-            detailSchedule.forEach((item, index) =>
-            {
-                let content = '';
-                content += `- Môn: ${item.Subject}.\n`;
-                content += `- Ngày: ${item.Date}.\n`;
-                content += `- Ca: ${item.Period}.\n`;
-                content += `- Phòng: ${item.Room}.\n`;
-                content += `- Lớp HP: ${item.Class}.\n`;
-                content += `- Nhóm: ${item.Group || 'Không'}.\n`;
-                content += `- Từ sĩ số: ${item.FromOrdinal || 'Không'}.\n`;
-                content += `- Loại thi: ${item.TestType}.\n`;
-                content += `- Ghi chú: ${item.Notes || 'Không'}.\n`;
+        schedules.push({text: `Mã sinh viên: ${indentifier.id}.\nTên: ${indentifier.fullName}.\nHọc kỳ: ${indentifier.term}.`});
+        detailSchedule.forEach((item, index) =>
+        {
+            let content = '';
+            content += `- Môn: ${item.Subject}.\n`;
+            content += `- Ngày: ${item.Date}.\n`;
+            content += `- Ca: ${item.Period}.\n`;
+            content += `- Phòng: ${item.Room}.\n`;
+            content += `- Lớp HP: ${item.Class}.\n`;
+            content += `- Nhóm: ${item.Group || 'Không'}.\n`;
+            content += `- Từ sĩ số: ${item.FromOrdinal || 'Không'}.\n`;
+            content += `- Loại thi: ${item.TestType}.\n`;
+            content += `- Ghi chú: ${item.Notes || 'Không'}.\n`;
 
 
-                schedules.push({ text: content });
-            });
-
-
-            console.log(schedules.length);
-            return resolve(schedules);
+            schedules.push({ text: content });
         });
+
+
+        console.log(schedules.length);
+        return schedules;
     }
     catch(error)
     {
         console.log(error);
+        return ({text: process.env.ERROR_MESSAGE});
     }
 }
 
@@ -54,6 +56,7 @@ async function getRawTestSchedule(studentID)
 {
     try
     {
+        console.log('\n\nGetting raw test schedule...');
         return new Promise((resolve, reject) =>
         {
             request({
@@ -64,10 +67,11 @@ async function getRawTestSchedule(studentID)
             {
                 if (err || (res.statusCode !== 200))
                 {
-                    return resolve([]);
+                    // console.log(err || body);
+                    return resolve('Student not found.');
                 }
 
-
+                // console.log(body);
                 return resolve(JSON.parse(body));
             });
         });
@@ -75,8 +79,7 @@ async function getRawTestSchedule(studentID)
     catch (err)
     {
         console.log(err);
+        return undefined;
     } 
 }
 
-
-module.exports = { renderTestScheduleTemplate }

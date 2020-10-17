@@ -5,10 +5,10 @@ let show_functions              = require('./direct-replies/show-functions');
 
 let show_headlines              = require('./sending/send-headlines');
 let show_studentNews            = require('./sending/send-student-news');
+
 let send_test_schedule          = require('./sending/send-test-schedule');
-let send_thisweek_schedule      = require('./sending/send-thisweek-schedule');
-let send_today_schedule         = require('./sending/send-today-schedule');
-let send_tomorrow_schedule         = require('./sending/send-tomorrow-schedule');
+let send_normal_schedule        = require('./sending/send-normal-schedule');
+
 let send_liability              = require('./sending/send-liability');
 let send_summary_marks          = require('./sending/send-summary-marks');
 
@@ -23,8 +23,8 @@ module.exports =
 
     show_headlines, show_studentNews, 
     send_liability, send_summary_marks, 
-    send_test_schedule, send_thisweek_schedule, send_today_schedule, send_tomorrow_schedule,
-
+    send_test_schedule, send_normal_schedule,
+    
     get_student_id, 
     continue_test_schedule
 };

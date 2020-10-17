@@ -14,17 +14,14 @@ async function send(cloner, studentID)
     let testScheduleTemplate = Array.from(await scheduleHandler.renderTestScheduleTemplate(studentID));
 
 
-    testScheduleTemplate.forEach((value, index) =>
-    {
-        (()=> {
-            setTimeout(() => {
-                bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: value});
-            }, 2000);
-        })();
+    testScheduleTemplate.forEach((value, index) => {
+        setTimeout(() => {
+            bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: value});
+        }, 2000 + index * 750);
     });
 
 
     setTimeout(() => {
         bot.blocks.continue_test_schedule.send(bot);
-    }, 1275);
+    }, 3000 + testScheduleTemplate.length * 750);
 }

@@ -2,166 +2,156 @@ const request = require('request');
 const moment = require('moment');
 require('dotenv/config');
 
-module.exports = { renderThisWeekSchedulesMessage, renderTodaySchedulesMessage, renderTomorrowSchedulesMessage }
+const ScheduleType = {
+    THIS_WEEK: 0,
+    TODAY: 1,
+    TOMORROW: 2
+};Object.freeze(ScheduleType);
+
+
+module.exports = { renderNormalSchedulesTemplate, ScheduleType };
 
 
 
-
-async function renderThisWeekSchedulesMessage(studentId) {
+async function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TODAY}) {
     try {
-        console.log('\n\n\nGetting this week schedules...');
 
-        let info = await getThisWeekSchedulesJSON(studentId);
-        let thisWeekDays = await getThisWeekDays();
+        let json = await getAllSchedulesJSON(studentId);
+        switch (json) {
+            case 'Student not found.': {
+                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
+            }
+            case undefined: //  lỗi xử lý từ hàm getAllSchedulesJSON()
+                return ({text: process.env.ERROR_MESSAGE});
+        }
+
+
+        //  chuyển mọi lịch học tồn tại vào Array
+        let schedulesArr = [];
+        let days = json.details;
+        for (day in days) {
+            if (days[day].morning.length !== 0)
+                schedulesArr = schedulesArr.concat(days[day].morning);
+
+            if (days[day].afternoon.length !== 0)
+                schedulesArr = schedulesArr.concat(days[day].afternoon);
+
+            if (days[day].evening.length !== 0)
+                schedulesArr = schedulesArr.concat(days[day].evening);
+        }
+
+
+        //  render các tin nhắn
         let messages = [];
-
-        //  duyệt qua từng ngày trong tuần / zero-based
-        let dates = info[1];
-        for (date in dates) {
-            if (dates[date].morning.length !== 0) {
-                let arr = Array.from(dates[date].morning);
-
-                //  duyệt qua các ngày trong thứ (một thứ chứa lịch học của nhiều ngày)
-                arr.forEach((value, index) => {
-                    if (thisWeekDays.includes(value.date)) {
-                        let content = '';
-
-                        let dayName = moment(value.date, 'DD-MM-YYYY').locale('vi').format('dddd');
-                        dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-
-                        content += dayName + ' - ';
-                        content += `Ngày: ${value.date}\n\n`;
-                        content += `- Ca: ${value.period}\n`;
-                        content += `- Phòng: ${value.room}\n`;
-                        content += `- Môn: ${value.subject_name}\n`;
-                        content += `- Hình thức: ${value.type}\n`;
-                        content += `- Giảng viên: ${value.teacher}\n`;
-
-                        messages.push({text: content});
-                    }
-                });
+        switch (type) {
+            case ScheduleType.THIS_WEEK: {
+                messages = await renderThisWeekSchedulesMessages(schedulesArr);
+                break;
+            }
+            case ScheduleType.TODAY: {
+                messages = await renderTodaySchedulesMessages(schedulesArr);
+                break;
+            }
+            case ScheduleType.TOMORROW: {
+                messages = await renderTomorrowSchedulesMessages(schedulesArr);
+                break;
             }
         }
 
-        return messages;
-    }
-    catch (error) {
-        console.log(error);
-        return [];  
-    }
-}
 
-async function renderTodaySchedulesMessage(studentId) {
-    try {
-        console.log('\n\n\nGetting today schedules...');
-
-        let info = await getThisWeekSchedulesJSON(studentId);
-        let today = moment().format('DD-MM-YYYY');
-        let messages = [];
-
-        //  duyệt qua từng ngày trong tuần / zero-based
-        let dates = info[1];
-        for (date in dates) {
-            if (dates[date].morning.length !== 0) {
-                let arr = Array.from(dates[date].morning);
-
-                //  duyệt qua các ngày trong thứ (một thứ chứa lịch học của nhiều ngày)
-                arr.forEach((value, index) => {
-                    if (today === value.date) {
-                        let content = '';
-
-                        let dayName = moment(value.date, 'DD-MM-YYYY').locale('vi').format('dddd');
-                        dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-
-                        content += dayName + ' - ';
-                        content += `Ngày: ${value.date}\n\n`;
-                        content += `- Ca: ${value.period}\n`;
-                        content += `- Phòng: ${value.room}\n`;
-                        content += `- Môn: ${value.subject_name}\n`;
-                        content += `- Hình thức: ${value.type}\n`;
-                        content += `- Giảng viên: ${value.teacher}\n`;
-
-                        messages.push({text: content});
-                    }
-                });
-            }
-        }
-
-        return messages;
-    }
-    catch (error) {
-        console.log(error);
-        return [];  
-    }
-}
-
-async function renderTomorrowSchedulesMessage(studentId) {
-    try {
-        console.log('\n\n\nGetting tomorrow schedules...');
-
-        let info = await getThisWeekSchedulesJSON(studentId);
-        let today = moment().add(1, 'day').format('DD-MM-YYYY');
-        let messages = [];
-
-        //  duyệt qua từng ngày trong tuần / zero-based
-        let dates = info[1];
-        for (date in dates) {
-            if (dates[date].morning.length !== 0) {
-                let arr = Array.from(dates[date].morning);
-
-                //  duyệt qua các ngày trong thứ (một thứ chứa lịch học của nhiều ngày)
-                arr.forEach((value, index) => {
-                    if (today === value.date) {
-                        let content = '';
-
-                        let dayName = moment(value.date, 'DD-MM-YYYY').locale('vi').format('dddd');
-                        dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-
-                        content += dayName + ' - ';
-                        content += `Ngày: ${value.date}\n\n`;
-                        content += `- Ca: ${value.period}\n`;
-                        content += `- Phòng: ${value.room}\n`;
-                        content += `- Môn: ${value.subject_name}\n`;
-                        content += `- Hình thức: ${value.type}\n`;
-                        content += `- Giảng viên: ${value.teacher}\n`;
-
-                        messages.push({text: content});
-                    }
-                });
-            }
-        }
-
-        return messages;
-    }
-    catch (error) {
-        console.log(error);
-        return [];  
-    }
-}
-
-
-
-
-async function getThisWeekSchedulesJSON(studentId) {
-    return new Promise((resolve, reject) =>
-        {
-            request({
-                method: 'GET',
-                url: `${process.env.SEARCHER_HOST}/?method=3&id=${studentId}`
-            },
-            (err, res, body) =>
-            {
-                if (err || (res.statusCode !== 200))
-                {
-                    return resolve({});
-                }
-
-
-                console.log(JSON.parse(body));
-                return resolve(JSON.parse(body));
-            });
+        //  thêm thông tin Sinh viên vào đầu
+        messages.unshift({
+            text: `${json.info.id} - ${json.info.fullName}\n${json.info.term}`
         });
+
+
+        return messages;
+    }
+    catch (err) {
+        console.log(err);
+        return ({text: process.env.ERROR_MESSAGE});
+    }
 }
+
+
+
+async function renderThisWeekSchedulesMessages(schedulesArr) {
+    let thisWeekDays = await getThisWeekDays(); //  các ngày trong tuần hiện tại (DD-MM-YYYY)
+    let messages = [];
+
+    schedulesArr.forEach( async (value, index) => {
+        if (thisWeekDays.includes(value.date)) {
+            messages.push({text: (await getMessageTemplate(value))});
+        }
+    });
+
+    return messages;
+}
+
+async function renderTodaySchedulesMessages(schedulesArr) {
+    let today = moment().format('DD-MM-YYYY');
+    let messages = [];
+
+    schedulesArr.forEach(async(value, index) => {
+        if (today === value.date) {
+            messages.push({text: (await getMessageTemplate(value))});
+        }
+    });
+
+    return messages;
+}
+
+async function renderTomorrowSchedulesMessages(schedulesArr) {
+    let today = moment().add(1, 'day').format('DD-MM-YYYY');
+    let messages = [];
+
+    schedulesArr.forEach(async(value, index) => {
+        if (today === value.date) {
+            messages.push({text: (await getMessageTemplate(value))});
+        }
+    });
+
+    return messages;
+}
+
+
+
+async function getAllSchedulesJSON(studentId) {
+    return new Promise((resolve, reject) => {
+        request({
+            method: 'GET',
+            url: `${process.env.SEARCHER_HOST}/?method=3&id=${studentId}`
+        },
+        (err, res, body) =>
+        {
+            if (err || (res.statusCode !== 200))
+            {
+                return resolve('Student not found.');
+            }
+
+            // console.log(JSON.parse(body));
+            return resolve(JSON.parse(body));
+        });
+    });
+}
+
+async function getMessageTemplate(schedule) {
+    let content = '';
+
+    let dayName = moment(schedule.date, 'DD-MM-YYYY').locale('vi').format('dddd');  //  lấy tên ngày trong tuần
+    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);   //  viết hoa chữ cái đầu
+
+    content += dayName + ' - ';
+    content += `Ngày: ${schedule.date}\n\n`;
+    content += `- Tiết: ${schedule.period}\n`;
+    content += `- Phòng: ${schedule.room}\n\n`;
+    content += `- Môn: ${schedule.subject_name}\n`;
+    content += `- Hình thức: ${schedule.type}\n\n`;
+    content += `- Giảng viên: ${schedule.teacher}\n`;
+
+    return content;
+}
+
 
 
 async function getThisWeekDays() {

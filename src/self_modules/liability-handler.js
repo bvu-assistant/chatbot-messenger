@@ -1,6 +1,6 @@
 module.exports = { renderLiabilityTemplate }
 const request = require('request');
-
+require('dotenv/config');
 
 
 
@@ -18,17 +18,19 @@ async function getLiability(studentID)
             {
                 if (err || (res.statusCode !== 200))
                 {
+                    console.log('\n\n\n\n', err || body);
                     return resolve('Student not found.');
                 }
 
 
-                return resolve(body);
+                return resolve(JSON.parse(body));
             });
         });
     }
     catch (err)
     {
         console.log(err);
+        return undefined;
     }   
 }
 
@@ -37,24 +39,27 @@ async function renderLiabilityTemplate(studentID)
 {
     try
     {
-        let liability = await getLiability(studentID);
-        if (liability === 'Student not found.')
-        {
-            return {text: 'Không tìm được công nợ.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'};
+        let json = await getLiability(studentID);
+        switch (json) {
+            case 'Student not found.': {
+                return {text: 'Không tìm được công nợ.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'};
+            }
+            case undefined: //  lỗi xử lý từ hàm getLiability()
+                return ({text: process.env.ERROR_MESSAGE});
         }
 
 
-        let arr = Array.from(JSON.parse(liability));
         let response = '';
-        response = response.concat(arr[0].ID + '.\n');
-        response = response.concat(arr[0].FullName + '.\n\n');
-        response = response.concat(arr[0].Term + '.\n');
-        response = response.concat(arr[1]);
+        response = response.concat(json.info.id + ' - ');
+        response = response.concat(json.info.fullName + '.\n\n');
+        response = response.concat(json.info.term + '.\n');
+        response = response.concat(json.details);
 
         return ({text: response});
     }
     catch (err)
     {
         console.log(err);
+        return ({text: process.env.ERROR_MESSAGE});
     }
 }

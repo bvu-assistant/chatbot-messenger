@@ -1,4 +1,5 @@
 module.exports = {handle}
+let nsh = require('../../self_modules/normal-schedule-handler');
 
 
 async function handle(cloner)
@@ -33,21 +34,22 @@ async function handle(cloner)
                             break;
                         }
 
+
                     case 'THISWEEKSCHEDULE_LOOKINGUP':
                         {
-                            bot.blocks.send_thisweek_schedule.send(bot, bot.sender.info.session.last_response);
+                            bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.THIS_WEEK});
                             break;
                         }
 
                     case 'TODAYSCHEDULE_LOOKINGUP':
                         {
-                            bot.blocks.send_today_schedule.send(bot, bot.sender.info.session.last_response);
+                            bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.TODAY});
                             break;
                         }
                         
                     case 'TOMORROWSCHEDULE_LOOKINGUP':
                         {
-                            bot.blocks.send_tomorrow_schedule.send(bot, bot.sender.info.session.last_response);
+                            bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.TOMORROW});
                             break;
                         }
                 }
