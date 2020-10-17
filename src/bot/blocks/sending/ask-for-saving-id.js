@@ -9,11 +9,15 @@ async function send(cloner)
     if (!bot.sender.info.studentId) {
         let info = 'Bạn chưa đặt mã số sinh viên.\n\nMã này giúp bạn không cần nhập mã sinh viên của mình mỗi khi tra cứu thông tin.';
         bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
-        bot.blocks.continue_saving_id.send(bot);
+        setTimeout(() => {
+            bot.blocks.continue_saving_id.send(bot);
+        }, 1750);
     }
     else {
         let info = `Mã sinh viên của bạn: ${bot.sender.info.studentId}`;
         bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
-        bot.blocks.continue_saving_id.send(bot, true);
+        setTimeout(() => {
+            bot.blocks.continue_saving_id.send(bot, true);
+        }, 1750);
     }
 }
