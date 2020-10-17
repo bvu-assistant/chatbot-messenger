@@ -20,7 +20,9 @@ async function send(cloner, studentID)
         }, 2000 + index * 750);
     });
 
-    if (testScheduleTemplate.length === 0) {
+
+    if (testScheduleTemplate.length === 0 ||
+         testScheduleTemplate.length === 1) {
         bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: 2.5});
     }
 
