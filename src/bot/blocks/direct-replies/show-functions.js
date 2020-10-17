@@ -38,9 +38,15 @@ async function send(cloner)
     let infoLookingUp_button_template = builder.createButtonTemplate({title: 'Tra cứu thông tin', buttons: buttonBlock_4});
 
 
+    let buttonBlock_5 = [
+        builder.createButton({type: 'postback', payload: 'SAVING_ID', title: '🙋 Mã số của tôi'})
+    ];
+    let settings_button_template = builder.createButtonTemplate({title: 'Thiết lập', buttons: buttonBlock_5});
+
     
     bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: newsLookingUp_button_template});
     bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: scheduleLookingUp_button_template});
     bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: scheduleLookingUp_button_template_1});
     bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: infoLookingUp_button_template});
+    bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: settings_button_template});
 }

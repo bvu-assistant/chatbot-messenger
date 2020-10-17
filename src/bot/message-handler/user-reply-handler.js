@@ -52,6 +52,20 @@ async function handle(cloner)
                             bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.TOMORROW});
                             break;
                         }
+
+
+                    case 'SAVING_ID': {
+                        bot.sender.info.studentId = bot.sender.info.session.last_response;
+                        bot.sender.updateSelf()
+                            .then(() => {
+                                bot.messageSender.sendText({recipientID: bot.sender.id, content: '✔️ Đã lưu mã sinh viên của bạn.', typingDelay: 1.35});
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                bot.messageSender.sendText({recipientID: bot.sender.id, content: '❌ Có lỗi xảy ra.', typingDelay: 1.35});
+                            });
+                        break;
+                    }
                 }
 
                 break;

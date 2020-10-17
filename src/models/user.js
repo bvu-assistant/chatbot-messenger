@@ -15,6 +15,7 @@ class User {
         this.info = {
             id: '',
             name: '',
+            studentId: '',
             first_name: '',
             last_name: '',
             profile_pic: '',
@@ -87,6 +88,7 @@ class User {
                     return resolve({
                         id: 'null',
                         name: '',
+                        studentId: '',
                         first_name: '',
                         last_name: '',
                         profile_pic: '',
@@ -98,6 +100,7 @@ class User {
                     });
                 }
 
+                body['studentId'] = '';
                 body['session'] = { reply_for: '', payload: '', last_response: '' };
                 return resolve(body);
             });

@@ -16,4 +16,8 @@ async function send(cloner)
     setTimeout(() => {
         bot.blocks.show_functions.send(bot);
     }, 2000);
+
+    setTimeout(() => {
+        bot.blocks.ask_for_saving_id.send(bot);
+    }, 5000);
 }

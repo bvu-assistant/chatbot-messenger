@@ -14,6 +14,8 @@ let send_summary_marks          = require('./sending/send-summary-marks');
 
 let get_student_id              = require('./getting-answer/get-student-id');
 let continue_test_schedule      = require('./quick-replies/continue-testschedule-lookingup');
+let continue_saving_id          = require('./quick-replies/confirm-saving-id');
+let ask_for_saving_id           = require('./sending/ask-for-saving-id');
 
 
 
@@ -25,6 +27,6 @@ module.exports =
     send_liability, send_summary_marks, 
     send_test_schedule, send_normal_schedule,
     
-    get_student_id, 
-    continue_test_schedule
+    get_student_id, ask_for_saving_id,
+    continue_test_schedule, continue_saving_id
 };

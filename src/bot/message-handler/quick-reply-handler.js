@@ -15,5 +15,11 @@ async function handle(cloner)
                 bot.blocks.get_student_id.send(bot, 'TESTSCHEDULE_LOOKINGUP');
                 break;
             }
+        
+        case 'CONTINUE_SAVING_ID':
+            {
+                bot.blocks.get_student_id.send(bot, 'SAVING_ID');
+                break;
+            }
     }
 }

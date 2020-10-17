@@ -63,6 +63,23 @@ async function handle(cloner)
             }
             
 
+        case 'SAVING_ID':
+            {
+                if (!bot.sender.info.studentId) {
+                    let info = 'Bạn chưa đặt mã số sinh viên.\n\nMã này giúp bạn không cần nhập mã sinh viên của mình mỗi khi tra cứu thông tin.';
+                    bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
+                    bot.blocks.continue_saving_id.send(bot);
+                }
+                else {
+                    let info = `Mã sinh viên của bạn: ${bot.sender.info.studentId}`;
+                    bot.messageSender.sendText({recipientID: bot.sender.id, content: info, typingDelay: 1.25});
+                    bot.blocks.continue_saving_id.send(bot, true);
+                }
+
+                break;
+            }
+
+
         case 'NEW_ELEARNING_SCHEDULE':
             {
                 //  Saky Naga là tài khoản sẽ gửi postback này đến Bot ==> Bot thông tin cho tài khoản biết.

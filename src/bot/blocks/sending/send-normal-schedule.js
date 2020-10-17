@@ -10,20 +10,22 @@ async function send({cloner, studentId, type = nsh.ScheduleType.TODAY})
     
     bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'mark_seen'});
     bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đang xử lý...', typingDelay: 1.35});
+    setTimeout(() => {
+        bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'typing_on'});
+    }, 750);
 
 
     let messages = await nsh.renderNormalSchedulesTemplate({studentId: studentId, type: type});
     messages = Array.from(messages);
 
     
-    if (messages.length === 0) {
-        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: 1.35});
-    }
-    else {
-        messages.forEach((value, index) => {
-            setTimeout(() => {
-                bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: value});
-            }, 2000 + index * 750);
-        });
+    messages.forEach((value, index) => {
+        setTimeout(() => {
+            bot.messageSender.sendMessageObject({recipientID: bot.sender.id, messageObj: value});
+        }, 2000 + index * 750);
+    });
+
+    if (messages.length === 1) {
+        bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Không có kết quả.', typingDelay: (2500 + messages.length * 750)/1000});
     }
 }
