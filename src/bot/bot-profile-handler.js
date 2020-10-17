@@ -74,6 +74,11 @@ class BotProfile
                             "title":"💯 Điểm học tập",
                             "type":"postback",
                             "payload":"MARKS_LOOKINGUP"
+                        },
+                        {
+                            "title":"🙋 Mã số của tôi",
+                            "type":"postback",
+                            "payload":"SAVING_ID"
                         }
                     ]
                 }
