@@ -40,13 +40,16 @@ async function handle(cloner)
                             bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.THIS_WEEK});
                             break;
                         }
-
+                    case 'NEXTWEEKSCHEDULE_LOOKINGUP':
+                        {
+                            bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.NEXT_WEEK});
+                            break;
+                        }
                     case 'TODAYSCHEDULE_LOOKINGUP':
                         {
                             bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.TODAY});
                             break;
                         }
-                        
                     case 'TOMORROWSCHEDULE_LOOKINGUP':
                         {
                             bot.blocks.send_normal_schedule.send({cloner: bot, studentId: bot.sender.info.session.last_response, type: nsh.ScheduleType.TOMORROW});

@@ -4,8 +4,9 @@ require('dotenv/config');
 
 const ScheduleType = {
     THIS_WEEK: 0,
-    TODAY: 1,
-    TOMORROW: 2
+    NEXT_WEEK: 1,
+    TODAY: 2,
+    TOMORROW: 3
 };Object.freeze(ScheduleType);
 
 
@@ -48,6 +49,10 @@ async function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TOD
                 messages = await renderThisWeekSchedulesMessages(schedulesArr);
                 break;
             }
+            case ScheduleType.NEXT_WEEK: {
+                messages = await renderNextWeekSchedulesMessages(schedulesArr);
+                break;
+            }
             case ScheduleType.TODAY: {
                 messages = await renderTodaySchedulesMessages(schedulesArr);
                 break;
@@ -77,6 +82,19 @@ async function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TOD
 
 async function renderThisWeekSchedulesMessages(schedulesArr) {
     let thisWeekDays = await getThisWeekDays(); //  các ngày trong tuần hiện tại (DD-MM-YYYY)
+    let messages = [];
+
+    schedulesArr.forEach( async (value, index) => {
+        if (thisWeekDays.includes(value.date)) {
+            messages.push({text: (await getMessageTemplate(value))});
+        }
+    });
+
+    return messages;
+}
+
+async function renderNextWeekSchedulesMessages(schedulesArr) {
+    let thisWeekDays = await getNextWeekDays(); //  các ngày trong tuần hiện tại (DD-MM-YYYY)
     let messages = [];
 
     schedulesArr.forEach( async (value, index) => {
@@ -156,6 +174,22 @@ async function getMessageTemplate(schedule) {
 
 async function getThisWeekDays() {
     let now = moment();
+
+
+    let startDay = now.clone().startOf('isoWeek');
+    let endDay = now.clone().endOf('isoWeek');
+    let days = [];
+
+
+    for (let i = 0; i < 7; i++) {
+        days.push(moment(startDay).add(i, 'days').format('DD-MM-YYYY'));
+    }
+
+    return days;
+}
+
+async function getNextWeekDays() {
+    let now = moment().add(1, 'week');
 
 
     let startDay = now.clone().startOf('isoWeek');

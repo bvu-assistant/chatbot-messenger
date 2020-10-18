@@ -45,11 +45,6 @@ class BotProfile
                             "payload":"TESTSCHEDULE_LOOKINGUP"
                         },
                         {
-                            "title":"📚 Lịch học tuần này",
-                            "type":"postback",
-                            "payload":"THISWEEKSCHEDULE_LOOKINGUP"
-                        },
-                        {
                             "title":"📖 Lịch học hôm nay",
                             "type":"postback",
                             "payload":"TODAYSCHEDULE_LOOKINGUP"
@@ -58,6 +53,16 @@ class BotProfile
                             "title":"🔆 Lịch học ngày mai",
                             "type":"postback",
                             "payload":"TOMORROWSCHEDULE_LOOKINGUP"
+                        },
+                        {
+                            "title":"📚 Lịch học tuần này",
+                            "type":"postback",
+                            "payload":"THISWEEKSCHEDULE_LOOKINGUP"
+                        },
+                        {
+                            "title":"〽️ Lịch học tuần sau",
+                            "type":"postback",
+                            "payload":"NEXTWEEKSCHEDULE_LOOKINGUP"
                         }
                     ]
                 },

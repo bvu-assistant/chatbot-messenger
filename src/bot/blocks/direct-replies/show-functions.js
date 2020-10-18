@@ -8,17 +8,18 @@ async function send(cloner)
     let builder = bot.builder;
 
 
-    let buttonBlock_1 = [
+    let newsBlock = [
         builder.createButton({type: 'postback', payload: 'HEADLINE_LOOKINGUP', title: '📰 Tin tức chính'}),
         builder.createButton({type: 'postback', payload: 'STUDENTNEWS_LOOKINGUP', title: '📢 Tin tức sinh viên'})
     ];
-    let newsLookingUp_button_template = builder.createButtonTemplate({title: 'Tin tức', buttons: buttonBlock_1});
+    let newsLookingUp_button_template = builder.createButtonTemplate({title: 'Tin tức', buttons: newsBlock});
 
 
 
     let buttonBlock_2 = [
         builder.createButton({type: 'postback', payload: 'TESTSCHEDULE_LOOKINGUP', title: '📝 Lịch thi'}),
-        builder.createButton({type: 'postback', payload: 'THISWEEKSCHEDULE_LOOKINGUP', title: '📚 Lịch học tuần này'})
+        builder.createButton({type: 'postback', payload: 'THISWEEKSCHEDULE_LOOKINGUP', title: '📚 Lịch học tuần này'}),
+        builder.createButton({type: 'postback', payload: 'NEXTWEEKSCHEDULE_LOOKINGUP', title: '〽️ Lịch học tuần sau'})
     ];
     let scheduleLookingUp_button_template = builder.createButtonTemplate({title: 'Tra cứu lịch', buttons: buttonBlock_2});
 

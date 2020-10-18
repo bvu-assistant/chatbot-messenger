@@ -52,7 +52,10 @@ async function handle(cloner)
                 break;
             }
 
-        case 'hi': case 'Hi':
+
+        case 'hi': case 'Hi': 
+        case 'hello': case 'Hello': 
+        case 'chào': case 'Chào':
             {
                 bot.blocks.reply_to_hi.send(bot);
                 break;
