@@ -113,7 +113,8 @@ class Bot
      */
     process()
     {
-        this.messageSender.sendSenderAction({recipientID: this.sender.ID, action: 'mark_seen'});
+        //  luôn đánh dấu đã đọc
+        this.messageSender.sendSenderAction({recipientID: this.sender.id, action: 'mark_seen'});
 
 
         if (this.sender.info.session.payload !== null && this.sender.info.session.payload !== '')

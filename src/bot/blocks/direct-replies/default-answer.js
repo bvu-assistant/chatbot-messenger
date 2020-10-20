@@ -8,7 +8,7 @@ async function send(cloner)
 
     bot.messageSender.sendText({
         recipientID: bot.sender.id,
-        content: 'Chọn menu ≡ hoặc gõ phím M để chọn các chức năng.\n\nVui lòng không nhập nội dung spam.',
+        content: 'Chọn menu ≡ hoặc gõ phím M để xem các chức năng.\n\n',
         typingDelay: 0.75
     });
 }

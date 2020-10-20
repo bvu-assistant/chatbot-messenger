@@ -8,10 +8,6 @@ async function handle(cloner)
     console.log('Bot cloned to "plaintext-handler".');
 
 
-    //  đánh dấu đã xem cho mọi tin nhắn văn bản gửi cho Bot
-    bot.messageSender.sendSenderAction({recipientID: bot.sender.id, action: 'mark_seen'});
-
-
     switch (bot.receivedText)
     {
         case 'sPM':

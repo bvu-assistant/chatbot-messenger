@@ -84,7 +84,7 @@ async function handle(cloner)
 
         default:
             {
-                
+                bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Chưa xử lý'});
             }
     }
 }
