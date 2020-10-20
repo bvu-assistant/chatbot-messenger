@@ -5,6 +5,28 @@ const firebaseAdmin = require('../self_modules/firebase/firebase-instance');
 const db = require('../self_modules/firebase/firebase-instance').admin.database();
 
 
+const UserModel = {
+    id: '',
+    is_exist: false,
+    info: {
+        id: '',
+        name: '',
+        studentId: '',
+        first_name: '',
+        last_name: '',
+        profile_pic: '',
+        session: {
+            reply_for: '',
+            payload: '',
+            last_response: '',
+        },
+        auto_alert_learning_schedule: {
+            enabled: false,
+
+        }
+    }
+}
+
 
 class User {
     constructor(id) {
@@ -23,6 +45,10 @@ class User {
                 reply_for: '',
                 payload: '',
                 last_response: '',
+            },
+            auto_alert_learning_schedule: {
+                enabled: false,
+                alert_before: ''
             }
         };
 
@@ -96,6 +122,10 @@ class User {
                             reply_for: '',
                             payload: '',
                             last_response: '',
+                        },
+                        auto_alert_learning_schedule: {
+                            enabled: false,
+                            alert_before: ''
                         }
                     });
                 }

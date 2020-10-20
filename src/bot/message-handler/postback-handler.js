@@ -1,4 +1,5 @@
 module.exports = {handle}
+require('dotenv/config');
 
 
 async function handle(cloner)
@@ -74,11 +75,26 @@ async function handle(cloner)
                 break;
             }
 
-
-        case 'NEW_ELEARNING_SCHEDULE':
+        case 'AUTO_ALERT_LEARNING_SCHEDULE':
             {
-                //  Saky Naga là tài khoản sẽ gửi postback này đến Bot ==> Bot thông tin cho tài khoản biết.
-                bot.messageSender.sendText({recipientID: bot.sender.ID, content: 'Đang gửi lịch E-Learning mới cho các thành viên...'});
+                if (bot.sender.info.auto_alert_learning_schedule) {
+                    bot.blocks.ask_for_alert_learning_schedule.send(bot, bot.sender.info.auto_alert_learning_schedule.enabled);
+                }
+                else {
+                    bot.sender.info.auto_alert_learning_schedule = {
+                        enabled: false
+                    }
+
+                    bot.sender.updateSelf()
+                        .then(() => {
+                            bot.blocks.ask_for_alert_learning_schedule.send(bot, false);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            bot.messageSender.sendText({recipientID: bot.sender.id, content: process.env.ERROR_MESSAGE, typingDelay: 1.35});
+                        })
+                }
+
                 break;
             }
 

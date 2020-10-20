@@ -180,6 +180,29 @@ class Bot
         quick_reply_handler.handle(this);
     }
 
+
+    sendBroadcast({recipientId, message}) {
+        this.messageSender.sendText({recipientID: recipientId, content: message});
+    }
+
+    getAllUsersId() {
+        return new Promise((resolve, reject) => {
+            let userIds = [];
+            let delay = 1000;
+
+            firebaseAdmin.facebookRealtimeDbRef.once('value', (snapshot) => {
+                snapshot.forEach(data => {
+                    let id = data.val()['id'];
+                    let name = data.val()['name'];
+
+                    setTimeout(() => {
+                        this.sendBroadcast({recipientId: id, message: 'Chào ' + name + '. Chúc bạn buổi trưa vui vẻ !'});
+                        delay += 1000;
+                    }, delay);
+                });
+            });
+        });
+    }
 }
 
 

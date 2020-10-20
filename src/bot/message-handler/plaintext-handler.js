@@ -56,6 +56,11 @@ async function handle(cloner)
                 bot.blocks.reply_to_hi.send(bot);
                 break;
             }
+
+        /*case 'Gaui': {
+            bot.getAllUsersId();
+            break;
+        }*/
         
         default:
             {
