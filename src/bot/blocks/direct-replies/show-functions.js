@@ -41,7 +41,7 @@ async function send(cloner)
 
     let buttonBlock_5 = [
         builder.createButton({type: 'postback', payload: 'SAVING_ID', title: '🙋 Mã số của tôi'}),
-        builder.createButton({type: 'postback', payload: 'AUTO_ALERT_LEARNING_SCHEDULE', title: '⏰ Nhắc nhở Lịch học'})
+        // builder.createButton({type: 'postback', payload: 'AUTO_ALERT_LEARNING_SCHEDULE', title: '⏰ Nhắc nhở Lịch học'})
     ];
     let settings_button_template = builder.createButtonTemplate({title: 'Thiết lập', buttons: buttonBlock_5});
 

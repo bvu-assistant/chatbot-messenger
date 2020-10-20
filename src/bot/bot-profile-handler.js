@@ -84,12 +84,13 @@ class BotProfile
                             "title":"🙋 Mã số của tôi",
                             "type":"postback",
                             "payload":"SAVING_ID"
-                        },
+                        }
+                        /*,
                         {
                             "title":"⏰ Nhắc nhở Lịch học",
                             "type":"postback",
                             "payload":"AUTO_ALERT_LEARNING_SCHEDULE"
-                        }
+                        }*/
                     ]
                 }
             ];

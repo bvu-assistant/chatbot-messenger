@@ -181,28 +181,41 @@ class Bot
     }
 
 
-    sendBroadcast({recipientId, message}) {
-        this.messageSender.sendText({recipientID: recipientId, content: message});
+    sendBroadcast({message}) {
+        this.getAllUsersId()
+            .then((users) => {
+
+                let delay = 1000;
+                users.forEach(data => {
+                    let id = data.val()['id'];
+                    setTimeout(() => {
+                        this.messageSender.sendText({recipientId: id, content: message});
+                        delay += 1000;
+                    }, delay);
+                });
+
+            })
+            .catch((err) => {
+                this.messageSender.sendText({
+                    recipientID: this.sender.id, 
+                    content: 'Error during sending Broadcast.\n' + err, 
+                    typingDelay: 1.35
+                });
+            });
     }
 
     getAllUsersId() {
         return new Promise((resolve, reject) => {
-            let userIds = [];
-            let delay = 1000;
-
-            firebaseAdmin.facebookRealtimeDbRef.once('value', (snapshot) => {
-                snapshot.forEach(data => {
-                    let id = data.val()['id'];
-                    let name = data.val()['name'];
-
-                    setTimeout(() => {
-                        this.sendBroadcast({recipientId: id, message: 'Chào ' + name + '. Chúc bạn buổi trưa vui vẻ !'});
-                        delay += 1000;
-                    }, delay);
-                });
+            firebaseAdmin.facebookRealtimeDbRef.once('value',
+                (snapshot) => {
+                return resolve(snapshot);
+            },
+                (error) => {
+                return reject(error.message);
             });
         });
     }
+    
 }
 
 
