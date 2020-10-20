@@ -55,7 +55,7 @@ async function handle(cloner)
             bot.sender.info.auto_alert_learning_schedule.enabled = true;
             bot.sender.updateSelf()
                 .then(() => {
-                    bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Đã đăng ký.', typingDelay: 1.35});
+                    bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Tính năng chưa xuất bản.', typingDelay: 1.35});
                 })
                 .catch(() => {
                     bot.messageSender.sendText({recipientID: bot.sender.id, content: 'Có lỗi xảy ra', typingDelay: 1.35});
