@@ -28,15 +28,14 @@ async function renderTestScheduleTemplate(studentID)
         {
             let content = '';
             content += `- Môn: ${item.Subject}.\n`;
-            content += `- Ngày: ${item.Date}.\n`;
-            content += `- Ca: ${item.Period}.\n`;
-            content += `- Phòng: ${item.Room}.\n`;
             content += `- Lớp HP: ${item.Class}.\n`;
-            content += `- Nhóm: ${item.Group || 'Không'}.\n`;
-            content += `- Từ sĩ số: ${item.FromOrdinal || 'Không'}.\n`;
-            content += `- Loại thi: ${item.TestType}.\n`;
+            content += `- Loại thi: ${item.TestType}.\n\n`;
+            content += `- Ngày: ${item.Date}.\n`;
+            content += `- Tiết: ${item.Period}.\n`;
+            content += `- Phòng: ${item.Room}.\n\n`;
+            content += `- Thứ tự: ${item.FromOrdinal || 'Không'}.\n`;
+            content += `- Nhóm: ${item.Group || 'Không'}.\n\n`;
             content += `- Ghi chú: ${item.Notes || 'Không'}.\n`;
-
 
             schedules.push({ text: content });
         });
