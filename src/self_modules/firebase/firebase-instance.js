@@ -7,7 +7,7 @@ class FirebaseInstance {
     constructor() {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
-            databaseURL: 'https://bvu-assistant.firebaseio.com'
+            databaseURL: 'https://bvu-assistant-8e10b.firebaseio.com'
         });
 
         this.admin = admin;
