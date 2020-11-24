@@ -12,6 +12,9 @@ async function renderTestScheduleTemplate(studentID)
             case 'Student not found.': {
                 return ({text: 'Không tìm được lịch thi.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
             }
+            case 'Application Error.': {
+                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
+            }
             case undefined: //  lỗi xử lý từ hàm getRawTestSchedule()
                 return ({text: process.env.ERROR_MESSAGE});
         }
@@ -64,6 +67,9 @@ async function getRawTestSchedule(studentID)
             },
             (err, res, body) =>
             {
+                if (res.statusCode == 503) {
+                    return resolve('Application Error.');
+                }
                 if (err || (res.statusCode !== 200))
                 {
                     // console.log(err || body);

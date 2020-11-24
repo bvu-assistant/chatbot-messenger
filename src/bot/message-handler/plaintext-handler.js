@@ -48,6 +48,12 @@ async function handle(cloner)
                 break;
             }
 
+        case 'sBRC':
+            {
+                bot.sendBroadcast({message: 'Có sự cố vừa xảy ra với Máy chủ.\n\nBạn vui lòng cập nhật Lịch học/Thi trên trang https://sinhvien.bvu.edu.vn.\n\nRất xin lỗi vì sự bất tiện này !'})
+                break;
+            }
+
 
         case 'hi': case 'Hi': 
         case 'hello': case 'Hello': 

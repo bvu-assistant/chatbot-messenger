@@ -22,6 +22,9 @@ async function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TOD
             case 'Student not found.': {
                 return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
             }
+            case 'Application Error.': {
+                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
+            }
             case undefined: //  lỗi xử lý từ hàm getAllSchedulesJSON()
                 return ({text: process.env.ERROR_MESSAGE});
         }
@@ -135,6 +138,7 @@ async function renderTomorrowSchedulesMessages(schedulesArr) {
 
 
 async function getAllSchedulesJSON(studentId) {
+    console.log('\n\nGetting learning schedules...');
     return new Promise((resolve, reject) => {
         request({
             method: 'GET',
@@ -142,12 +146,18 @@ async function getAllSchedulesJSON(studentId) {
         },
         (err, res, body) =>
         {
+            // console.log('\n\nbody:', body, res.statusCode);
+
+            if (res.statusCode == 503) {
+                return resolve('Application Error.');
+            }
+
             if (err || (res.statusCode !== 200))
             {
                 return resolve('Student not found.');
             }
 
-            // console.log(JSON.parse(body));
+            console.log('\n\nbody:', JSON.parse(body));
             return resolve(JSON.parse(body));
         });
     });

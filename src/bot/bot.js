@@ -188,8 +188,10 @@ class Bot
                 let delay = 1000;
                 users.forEach(data => {
                     let id = data.val()['id'];
+                    console.log(id);
+
                     setTimeout(() => {
-                        this.messageSender.sendText({recipientId: id, content: message});
+                        this.messageSender.sendText({recipientID: id, content: message});
                         delay += 1000;
                     }, delay);
                 });
