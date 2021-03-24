@@ -21,78 +21,57 @@ class BotProfile
         {
             let buttons = [
                 {
-                    "type": "nested",
-                    "title": "Tin tức",
-                    "call_to_actions":[
-                        {
-                            "title":"📰 Tin chính",
-                            "type":"postback",
-                            "payload":"HEADLINE_LOOKINGUP"
-                        },
-                        {
-                            "title":"📢 Tin sinh viên",
-                            "type":"postback",
-                            "payload":"STUDENTNEWS_LOOKINGUP"
-                        }]
+                    "title":"📰 Tin chính",
+                    "type":"postback",
+                    "payload":"HEADLINE_LOOKINGUP"
                 },
                 {
-                    "title":"Tra cứu lịch",
-                    "type":"nested",
-                    "call_to_actions":[
-                        {
-                            "title":"📝 Lịch thi",
-                            "type":"postback",
-                            "payload":"TESTSCHEDULE_LOOKINGUP"
-                        },
-                        {
-                            "title":"📖 Lịch học hôm nay",
-                            "type":"postback",
-                            "payload":"TODAYSCHEDULE_LOOKINGUP"
-                        },
-                        {
-                            "title":"🔆 Lịch học ngày mai",
-                            "type":"postback",
-                            "payload":"TOMORROWSCHEDULE_LOOKINGUP"
-                        },
-                        {
-                            "title":"📚 Lịch học tuần này",
-                            "type":"postback",
-                            "payload":"THISWEEKSCHEDULE_LOOKINGUP"
-                        },
-                        {
-                            "title":"〽️ Lịch học tuần sau",
-                            "type":"postback",
-                            "payload":"NEXTWEEKSCHEDULE_LOOKINGUP"
-                        }
-                    ]
+                    "title":"📢 Tin sinh viên",
+                    "type":"postback",
+                    "payload":"STUDENTNEWS_LOOKINGUP"
+                },
+
+                {
+                    "title":"📝 Lịch thi",
+                    "type":"postback",
+                    "payload":"TESTSCHEDULE_LOOKINGUP"
                 },
                 {
-                    "type": "nested",
-                    "title": "Tra cứu thông tin",
-                    "call_to_actions":[
-                        {
-                            "title":"💵 Công nợ",
-                            "type":"postback",
-                            "payload":"LIABILITY_LOOKINGUP"
-                        },
-                        {
-                            "title":"💯 Điểm học tập",
-                            "type":"postback",
-                            "payload":"MARKS_LOOKINGUP"
-                        },
-                        {
-                            "title":"🙋 Mã số của tôi",
-                            "type":"postback",
-                            "payload":"SAVING_ID"
-                        }
-                        /*,
-                        {
-                            "title":"⏰ Nhắc nhở Lịch học",
-                            "type":"postback",
-                            "payload":"AUTO_ALERT_LEARNING_SCHEDULE"
-                        }*/
-                    ]
-                }
+                    "title":"📖 Lịch học hôm nay",
+                    "type":"postback",
+                    "payload":"TODAYSCHEDULE_LOOKINGUP"
+                },
+                {
+                    "title":"🔆 Lịch học ngày mai",
+                    "type":"postback",
+                    "payload":"TOMORROWSCHEDULE_LOOKINGUP"
+                },
+                {
+                    "title":"📚 Lịch học tuần này",
+                    "type":"postback",
+                    "payload":"THISWEEKSCHEDULE_LOOKINGUP"
+                },
+                {
+                    "title":"〽️ Lịch học tuần sau",
+                    "type":"postback",
+                    "payload":"NEXTWEEKSCHEDULE_LOOKINGUP"
+                },
+
+                {
+                    "title":"💵 Công nợ",
+                    "type":"postback",
+                    "payload":"LIABILITY_LOOKINGUP"
+                },
+                {
+                    "title":"💯 Điểm học tập",
+                    "type":"postback",
+                    "payload":"MARKS_LOOKINGUP"
+                },
+                {
+                    "title":"🙋 Mã số của tôi",
+                    "type":"postback",
+                    "payload":"SAVING_ID"
+                },
             ];
 
             this.createPersistentMenu({buttons: buttons});
