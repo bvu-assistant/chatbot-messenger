@@ -14,71 +14,73 @@ module.exports = { renderNormalSchedulesTemplate, ScheduleType };
 
 
 
-async function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TODAY}) {
-    try {
+function renderNormalSchedulesTemplate({studentId, type = ScheduleType.TODAY}) {
+    return new Promise((resolve, reject) => {
 
-        let json = await getAllSchedulesJSON(studentId);
-        switch (json) {
-            case 'Student not found.': {
-                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
-            }
-            case 'Application Error.': {
-                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
-            }
-            case undefined: //  lỗi xử lý từ hàm getAllSchedulesJSON()
-                return ({text: process.env.ERROR_MESSAGE});
-        }
+        //  get the HTML => parse to JSON to easyly manipulating
+        getAllSchedulesJSON(studentId)
+            .then(async (json) => {
 
+                let schedulesArr = Array.from(json);
+                let days = json.details;
 
-        //  chuyển mọi lịch học tồn tại vào Array
-        let schedulesArr = [];
-        let days = json.details;
-        for (day in days) {
-            if (days[day].morning.length !== 0)
-                schedulesArr = schedulesArr.concat(days[day].morning);
+                for (day in days) {
+                    if (days[day].morning.length !== 0)
+                        schedulesArr = schedulesArr.concat(days[day].morning);
 
-            if (days[day].afternoon.length !== 0)
-                schedulesArr = schedulesArr.concat(days[day].afternoon);
+                    if (days[day].afternoon.length !== 0)
+                        schedulesArr = schedulesArr.concat(days[day].afternoon);
 
-            if (days[day].evening.length !== 0)
-                schedulesArr = schedulesArr.concat(days[day].evening);
-        }
+                    if (days[day].evening.length !== 0)
+                        schedulesArr = schedulesArr.concat(days[day].evening);
+                }
 
 
-        //  render các tin nhắn
-        let messages = [];
-        switch (type) {
-            case ScheduleType.THIS_WEEK: {
-                messages = await renderThisWeekSchedulesMessages(schedulesArr);
-                break;
-            }
-            case ScheduleType.NEXT_WEEK: {
-                messages = await renderNextWeekSchedulesMessages(schedulesArr);
-                break;
-            }
-            case ScheduleType.TODAY: {
-                messages = await renderTodaySchedulesMessages(schedulesArr);
-                break;
-            }
-            case ScheduleType.TOMORROW: {
-                messages = await renderTomorrowSchedulesMessages(schedulesArr);
-                break;
-            }
-        }
+                //  render các tin nhắn
+                let messages = [];
+                switch (type) {
+                    case ScheduleType.THIS_WEEK: {
+                        messages = await renderThisWeekSchedulesMessages(schedulesArr);
+                        break;
+                    }
+                    case ScheduleType.NEXT_WEEK: {
+                        messages = await renderNextWeekSchedulesMessages(schedulesArr);
+                        break;
+                    }
+                    case ScheduleType.TODAY: {
+                        messages = await renderTodaySchedulesMessages(schedulesArr);
+                        break;
+                    }
+                    case ScheduleType.TOMORROW: {
+                        messages = await renderTomorrowSchedulesMessages(schedulesArr);
+                        break;
+                    }
+                }
 
 
-        //  thêm thông tin Sinh viên vào đầu
-        messages.unshift({
-            text: `${json.info.id} - ${json.info.fullName}\n${json.info.term}`
-        });
+                //  thêm thông tin Sinh viên vào đầu
+                messages.unshift({
+                    text: `${json.info.id} - ${json.info.fullName}\n${json.info.term}`
+                });
 
 
-        return messages;
-    }
-    catch (err) {
-        console.log(err);
-        return ({text: process.env.ERROR_MESSAGE});
-    }
+                return resolve(messages);
+            })
+            .catch((err) => {
+                switch (err) {
+                    case 'Student not found.': {
+                        return reject({text: 'Không tìm được điểm.\n\nMã sinh viên không tồn tại.'});
+                    }
+
+                    case 'Application Error.': {
+                        return reject({text: 'Không tìm được điểm.\n\nMáy chủ đang quá tải.'});
+                    }
+
+                    case undefined: //  lỗi xử lý từ hàm getAllSchedulesJSON()
+                        return reject({text: process.env.ERROR_MESSAGE});
+                }
+            });
+    });
 }
 
 
@@ -137,8 +139,9 @@ async function renderTomorrowSchedulesMessages(schedulesArr) {
 
 
 
-async function getAllSchedulesJSON(studentId) {
+function getAllSchedulesJSON(studentId) {
     console.log('\n\nGetting learning schedules...');
+
     return new Promise((resolve, reject) => {
         request({
             method: 'GET',
@@ -146,15 +149,13 @@ async function getAllSchedulesJSON(studentId) {
         },
         (err, res, body) =>
         {
-            // console.log('\n\nbody:', body, res.statusCode);
-
             if (res.statusCode == 503) {
-                return resolve('Application Error.');
+                return reject('Application Error.');
             }
 
             if (err || (res.statusCode !== 200))
             {
-                return resolve('Student not found.');
+                return reject('Student not found.');
             }
 
             console.log('\n\nbody:', JSON.parse(body));

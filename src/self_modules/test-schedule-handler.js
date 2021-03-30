@@ -1,90 +1,90 @@
 module.exports = { renderTestScheduleTemplate }
 const request = require('request');
+const csvSaver = require('./csv-creator');
 require('dotenv/config');
 
 
-async function renderTestScheduleTemplate(studentID)
-{
-    try
-    {
-        let json = await getRawTestSchedule(studentID);
-        switch (json) {
-            case 'Student not found.': {
-                return ({text: 'Không tìm được lịch thi.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
-            }
-            case 'Application Error.': {
-                return ({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
-            }
-            case undefined: //  lỗi xử lý từ hàm getRawTestSchedule()
-                return ({text: process.env.ERROR_MESSAGE});
-        }
+function renderTestScheduleTemplate(studentID) {
+    return new Promise((resolve, reject) => {
 
+        getRawTestSchedule(studentID)
+            .then(json => {
 
-        let schedules = [];
-        let jsonSchedule = json;
-        let detailSchedule = Array.from(jsonSchedule.details);
-        let indentifier = jsonSchedule.info;
-
-
-        schedules.push({text: `Mã sinh viên: ${indentifier.id}.\nTên: ${indentifier.fullName}.\nHọc kỳ: ${indentifier.term}.`});
-        detailSchedule.forEach((item, index) =>
-        {
-            let content = '';
-            content += `- Môn: ${item.Subject}.\n`;
-            content += `- Lớp HP: ${item.Class}.\n`;
-            content += `- Loại thi: ${item.TestType}.\n\n`;
-            content += `- Ngày: ${item.Date}.\n`;
-            content += `- Tiết: ${item.Period}.\n`;
-            content += `- Phòng: ${item.Room}.\n\n`;
-            content += `- Thứ tự: ${item.FromOrdinal || 'Không'}.\n`;
-            content += `- Nhóm: ${item.Group || 'Không'}.\n\n`;
-            content += `- Ghi chú: ${item.Notes || 'Không'}.\n`;
-
-            schedules.push({ text: content });
-        });
-
-
-        console.log(schedules.length);
-        return schedules;
-    }
-    catch(error)
-    {
-        console.log(error);
-        return ({text: process.env.ERROR_MESSAGE});
-    }
-}
-
-async function getRawTestSchedule(studentID)
-{
-    try
-    {
-        console.log('\n\nGetting raw test schedule...');
-        return new Promise((resolve, reject) =>
-        {
-            request({
-                method: 'GET',
-                url: `${process.env.SEARCHER_HOST}/?method=2&id=${studentID}`
-            },
-            (err, res, body) =>
-            {
-                if (res.statusCode == 503) {
-                    return resolve('Application Error.');
-                }
-                if (err || (res.statusCode !== 200))
+                let schedules = [];
+                let jsonSchedule = json;
+                let detailSchedule = Array.from(jsonSchedule.details);
+                let indentifier = jsonSchedule.info;
+        
+        
+                schedules.push({text: `Mã sinh viên: ${indentifier.id}.\nTên: ${indentifier.fullName}.\nHọc kỳ: ${indentifier.term}.`});
+                
+                detailSchedule.forEach((item, index) =>
                 {
-                    // console.log(err || body);
-                    return resolve('Student not found.');
+                    let content = '';
+                    content += `- Môn: ${item.Subject}.\n`;
+                    content += `- Lớp HP: ${item.Class}.\n`;
+                    content += `- Loại thi: ${item.TestType}.\n\n`;
+                    content += `- Ngày: ${item.Date}.\n`;
+                    content += `- Tiết: ${item.Period}.\n`;
+                    content += `- Phòng: ${item.Room}.\n\n`;
+                    content += `- Thứ tự: ${item.FromOrdinal || 'Không'}.\n`;
+                    content += `- Nhóm: ${item.Group || 'Không'}.\n\n`;
+                    content += `- Ghi chú: ${item.Notes || 'Không'}.\n`;
+        
+                    schedules.push({ text: content });
+                });
+        
+        
+                //  save csv file
+                if (detailSchedule.length) {
+                    csvSaver(studentID, json)
+                        .then((fileName) => {
+                            return resolve({
+                                schedules,
+                                fileName,
+                            });
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return resolve({
+                                schedules,
+                                fileName: '',
+                            });
+                        });
                 }
+            })
+            .catch(err => {
+                switch (err) {
+                    case 'Student not found.': {
+                        return reject({text: 'Không tìm được lịch thi.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
+                    }
 
-                // console.log(body);
-                return resolve(JSON.parse(body));
+                    case 'Application Error.': {
+                        return reject({text: 'Không tìm được điểm.\n\nMã sinh viên sai hoặc máy chủ đang quá tải.'});
+                    }
+                }
             });
-        });
-    }   
-    catch (err)
-    {
-        console.log(err);
-        return undefined;
-    } 
+    });
 }
 
+function getRawTestSchedule(studentID) {
+    console.log('\n\nGetting raw test schedule...');
+    return new Promise((resolve, reject) => {
+        request({
+            method: 'GET',
+            url: `${process.env.SEARCHER_HOST}/?method=2&id=${studentID}`
+        },
+        (err, res, body) => {
+            if (res.statusCode == 503) {
+                return reject('Application Error.');
+            }
+
+            if (err || (res.statusCode !== 200)) {
+                return reject('Student not found.');
+            }
+
+
+            return resolve(JSON.parse(body));
+        });
+    });
+}

@@ -9,7 +9,7 @@ const firebaseAdmin = require('../self_modules/firebase/firebase-instance');
 
 class Bot
 {
-    #access_token = process.env.PAGE_ACCESS_TOKEN;       //  Private field - Can only be used in this class
+    access_token = process.env.PAGE_ACCESS_TOKEN;       //  Private field - Can only be used in this class
 
     constructor(webhookRequest, cloner = undefined)
     {
@@ -33,6 +33,7 @@ class Bot
         this.sender = undefined;
         this.waitingFor = undefined;
         this.builder = new messageBuilder();
+        this.nlp = undefined;
 
 
         return new Promise( async(resolve, reject) =>
@@ -46,6 +47,8 @@ class Bot
             let messaging = webhookRequest.body.entry[0].messaging[0];
             console.log('\n\n■■■ Received messaging:', messaging);
             console.log('\n■■■ Initializing bot...');
+            console.log(messaging);
+
             this.recipientID = messaging.recipient.id;
             this.timestamp = messaging.timestamp;
             let senderID = messaging.sender.id;
@@ -64,14 +67,22 @@ class Bot
                     console.log('Unable to initialize the bot. Nothing changes. Reason: is_echo');
                     return reject(undefined);
                 }
+
                 if (message.attachments)
                 {
                     this.attachments = message.attachments;
                 }
+
                 if (message.text)
                 {
                     this.receivedText = message.text;
                 }
+
+                if (message.nlp) {
+                    this.nlp = message.nlp;
+                    console.log('\n\nnlp:', this.nlp, this.nlp.entities);
+                }
+
                 if (message.quick_reply)            //  Nếu có nút trả lời (lựa chọn) nhanh
                 {
                     this.isQuickReply = true;

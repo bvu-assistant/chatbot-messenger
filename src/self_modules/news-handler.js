@@ -33,11 +33,13 @@ async function renderHeadlinesTemplate()
                 buttons: [
                     builder.createButton({
                         type: 'web_url',
+                        webview_height_ratio: "tall",
                         url: currItem.Link,
-                        title: 'Truy cập'
+                        title: 'Truy cậpp'
                     }),
                     builder.createButton({
                         type: 'web_url',
+                        "webview_height_ratio": "tall",
                         url: view_url,
                         title: 'Xem nhanh'
                     }),
@@ -84,11 +86,13 @@ async function renderStudentNewsTemplate()
                 buttons: [
                     builder.createButton({
                         type: 'web_url',
+                        "webview_height_ratio": "tall",
                         url: currItem.Link,
                         title: 'Truy cập'
                     }),
                     builder.createButton({
                         type: 'web_url',
+                        "webview_height_ratio": "tall",
                         url: view_url,
                         title: 'Xem nhanh'
                     }),
@@ -235,4 +239,3 @@ async function scrapStudentNews()
         console.log(err);
     }
 }
-
