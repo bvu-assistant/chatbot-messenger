@@ -130,11 +130,11 @@ request({
               "type":"file", 
               "payload":{
                   "is_reusable": true,
-                  url: path.resolve(__dirname, '../../../self_modules/test-schedules-csv/', `${18033747}.csv`),
+                  url: `https://e5cccb15677c.ngrok.io/test-csv/${18033747}`
               }
           }
       },
-      // "filedata": fs.createReadStream(path.resolve(__dirname, '../../../self_modules/test-schedules-csv/', `${18033747}.csv`))
+    //   "filedata": fs.createReadStream(path.resolve(__dirname, '../../../self_modules/test-schedules-csv/', `${18033747}.csv`))
   },
 },
 (err, res, body) => {

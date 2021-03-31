@@ -1,6 +1,7 @@
 module.exports = { renderTestScheduleTemplate }
 const request = require('request');
-const csvSaver = require('./csv-creator');
+// const csvSaver = require('./csv-creator');
+const icsSaver = require('./ics-creator');
 require('dotenv/config');
 
 
@@ -37,7 +38,7 @@ function renderTestScheduleTemplate(studentID) {
         
                 //  save csv file
                 if (detailSchedule.length) {
-                    csvSaver(studentID, json)
+                    icsSaver(studentID, json)
                         .then((fileName) => {
                             return resolve({
                                 schedules,

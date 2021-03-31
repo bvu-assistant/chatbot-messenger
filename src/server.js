@@ -3,6 +3,8 @@
 
 const express = require('express');
 const logger = require('morgan');
+const http = require('http');
+const path = require('path');
 const app = express();
 require('dotenv/config');
 
@@ -22,6 +24,13 @@ app.use('/webhook', require('./routes/webhook'));
 app.get('/', (req, res) =>
 {
     res.status(200).send('BVU Assistant ChatBot server running Oke.');
+});
+
+
+
+app.get('/test-ics/:studentId', (req, res) => {
+    const id = req.params.studentId;
+    res.download(path.resolve(__dirname, `./self_modules/test-schedules-ics/${id}.ics`), );
 });
 
 
