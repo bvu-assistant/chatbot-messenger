@@ -43,7 +43,7 @@ async function send(cloner, studentID)
                                     "type":"file", 
                                     "payload":{
                                         "is_reusable": true,
-                                        url: `http://bvu-assistant.herokuapp.com/test-ics/${18033747}`
+                                        url: `http://bvu-assistant.herokuapp.com/test-ics/${studentID}`
                                     }
                                 }
                             },
