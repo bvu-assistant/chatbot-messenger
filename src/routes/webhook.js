@@ -31,12 +31,11 @@ router.post('/', async(req, res) =>
     console.log('\n\n———————————————————————————————————————————————————————————————————————————————');
     console.log('■■■ Have just received request from Facebook webhook.');
 
-
     try
     {
         let bot = await new Bot(req);   //  initializing the bot may take quite much time
 
-        console.log('\n\n■■■ ', bot, bot.sender.info.session, '\n');
+        // console.log('\n\n■■■ ', bot, bot.sender.info.session, '\n');
         bot.process();
     }
     catch (error)

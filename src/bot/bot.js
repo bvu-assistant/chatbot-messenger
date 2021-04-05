@@ -18,6 +18,8 @@ class Bot
             return cloner;
         }
 
+        this.isNewsAdded = false;
+        this.mockData = undefined;
         this.profileHandler = new profileHanlder();
         this.messageSender = new messageSender();
         this.blocks = blocks_handler;
@@ -41,6 +43,15 @@ class Bot
             if (cloner !== undefined)    //  cloner là một instance đã được khởi tạo của bot  ==> gán tham chiếu
             {
                 return resolve(cloner);
+            }
+
+            console.log(webhookRequest.body);
+
+            //  news has just added
+            if (webhookRequest.body.isNewsAdded) {
+                this.isNewsAdded = true;
+                this.mockData = webhookRequest.body.mockData;
+                return resolve(this);
             }
 
             
@@ -124,6 +135,12 @@ class Bot
      */
     process()
     {
+        if (this.isNewsAdded) {
+            this.sendNewsBroadcast();
+            return;
+        }
+
+
         //  luôn đánh dấu đã đọc
         this.messageSender.sendSenderAction({recipientID: this.sender.id, action: 'mark_seen'});
 
@@ -192,6 +209,39 @@ class Bot
     }
 
 
+    sendNewsBroadcast() {
+        console.log('mock data...', this.mockData);
+        const view_url = `${process.env.VIEWER_HOST}/${this.mockData.Id}`;
+
+        const generic = this.builder.createGeneric({
+            title: this.mockData.Title,
+            subtitle: this.mockData.Date,
+            image_url: 'https://i.imgur.com/okwgAyw.jpg',
+            default_action: this.builder.createDefaultAction({
+                url: this.mockData.Link
+            }),
+            buttons: [
+                this.builder.createButton({
+                    type: 'web_url',
+                    webview_height_ratio: "tall",
+                    url: this.mockData.Link,
+                    title: 'Truy cập'
+                }),
+                this.builder.createButton({
+                    type: 'web_url',
+                    "webview_height_ratio": "tall",
+                    url: view_url,
+                    title: 'Xem nhanh'
+                }),
+            ]
+        });
+
+        console.log(generic);
+        this.sendBroadcast({message: this.builder.createGenericTemplate({
+            elements: generic,
+        })});
+    }
+
     sendBroadcast({message}) {
         this.getAllUsersId()
             .then((users) => {
@@ -202,11 +252,10 @@ class Bot
                     console.log(id);
 
                     setTimeout(() => {
-                        this.messageSender.sendText({recipientID: id, content: message});
+                        this.messageSender.sendMessageObject({recipientID: id, messageObj: message, typingDelay: 1.5});
                         delay += 1000;
                     }, delay);
                 });
-
             })
             .catch((err) => {
                 this.messageSender.sendText({

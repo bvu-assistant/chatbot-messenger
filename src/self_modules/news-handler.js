@@ -35,7 +35,7 @@ async function renderHeadlinesTemplate()
                         type: 'web_url',
                         webview_height_ratio: "tall",
                         url: currItem.Link,
-                        title: 'Truy cậpp'
+                        title: 'Truy cập'
                     }),
                     builder.createButton({
                         type: 'web_url',
