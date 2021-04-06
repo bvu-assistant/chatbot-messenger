@@ -54,7 +54,7 @@ app.listen(PORT, () =>
 
 
 
-const firestoreListener = require('./self_modules/firebase/firebase-news-listener-instance');
+const firestoreListener = require('./self_modules/firebase/firebase-instance');
 firestoreListener.admin
     .firestore()
     .doc('news/details')
