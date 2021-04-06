@@ -5,6 +5,7 @@ const messageBuilder = require('./message-handler/message-builder');
 const blocks_handler = require('./blocks/blocks-handler');
 const facebook_user = require('../models/user');
 const firebaseAdmin = require('../self_modules/firebase/firebase-instance');
+const request = require('request');
 
 
 class Bot
@@ -252,17 +253,34 @@ class Bot
                     console.log(id);
 
                     setTimeout(() => {
-                        this.messageSender.sendMessageObject({recipientID: id, messageObj: message, typingDelay: 1.5});
+                        // this.messageSender.sendMessageObject({recipientID: id, messageObj: message, typingDelay: 1.5});
+
+                        request({
+                            method: 'POST',
+                            url: process.env.MESSAGE_API,
+                            qs: { access_token: this.access_token },
+                            json: {
+                                recipient: {id: id},
+                                messaging_type: "MESSAGE_TAG",
+                                tag: "CONFIRMED_EVENT_UPDATE",
+                                message: message,
+                            },
+                        },
+                        (err, res, body) => {
+                            if (err || (res.statusCode !== 200)) {
+                                console.log(`■■■ bot.js:270 - Can\'t send the broadcast message for: ${id}' — Err:`, err || body);
+                            }
+                            else {
+                                console.log('■■■ Sended message objects for:', id);
+                            }
+                        });
+
                         delay += 1000;
                     }, delay);
                 });
             })
             .catch((err) => {
-                this.messageSender.sendText({
-                    recipientID: this.sender.id, 
-                    content: 'Error during sending Broadcast.\n' + err, 
-                    typingDelay: 1.35
-                });
+                console.log('Error during sending Broadcast.\n', err);
             });
     }
 
