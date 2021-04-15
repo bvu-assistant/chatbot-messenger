@@ -73,7 +73,7 @@ firestoreListener.admin
                     if (snapshopt.docChanges().length == 1) {
                         snapshopt.docChanges().forEach((change, mIndex, mArr) => {
                             switch (change.type) {
-                                case 'added': case 'modified':  //  handle news added
+                                case 'added':  //  handle news added
                                     setupMockData(change.doc.data());
                                     break;
                             
