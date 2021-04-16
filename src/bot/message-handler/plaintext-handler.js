@@ -43,6 +43,7 @@ async function handle(cloner)
             }
 
         case 'M': case 'm':
+        case 'Menu': case 'menu': case '?':
             {
                 bot.blocks.show_functions.send(bot);
                 break;
@@ -70,7 +71,11 @@ async function handle(cloner)
         
         default:
             {
-                bot.blocks.defaut_answer.send(bot);
+                // bot.blocks.defaut_answer.send(bot);
+                bot.messageSender.sendSenderAction({
+                    recipientID: bot.sender.id,
+                    action: 'mark_seen',
+                });
             }
     }
 }
